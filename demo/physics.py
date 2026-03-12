@@ -8,7 +8,7 @@ def entropy_stable(s, tol=1e-15):
 
 
 def random_singlets(n_qubits, seed=None):
-    """ Produces a state with randomly paired qubits on a given number of qubits."""
+    """Produces a state with randomly paired qubits on a lattice of shape `n_qubits`."""
     n = int(np.prod(n_qubits))
     if n % 2:
         raise ValueError("n must be even")
@@ -43,8 +43,7 @@ class State:
         self.psi = state_vector
 
     def entanglement_entropy(self, subsystem):
-        """ Given a wave function and an index set, calculates the Schmidt decomposition over A and B, with A the
-        subsystem (a given set of indices) and B the complement. Calculates entropy from the singular values. """
+        """Given the subsystem site indices, compute the entanglement entropy from the Schmidt values."""
         psi = self._reshape_psi(self.psi, subsystem)
         sv = np.linalg.svd(psi, compute_uv=False)
         while np.where(np.isnan(sv))[0].shape[0] > 0:
@@ -55,7 +54,7 @@ class State:
 
     @staticmethod
     def _reshape_psi(psi, subsystem):
-        """ Reshapes `psi` in two sectors A and B of the Schmidt decomposition. """
+        """Reshape `psi` into the two sectors of the Schmidt decomposition."""
         len_subsystem = subsystem.shape[0]
         n = int(np.log2(np.prod(psi.shape)))
         # Bi-partition of Hilbert space

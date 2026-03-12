@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "2d-information-lattice"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.23",
+    "matplotlib>=3.7",
+    "scipy>=1.10",
+    "joblib>=1.4.0",
+    "tqdm>=4.65.0"
+]
+
+[tool.setuptools.packages.find]
+include = ["utils", "utils.*"]

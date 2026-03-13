@@ -70,3 +70,6 @@ __pypackages__/
 .AppleDouble
 .LSOverride
 
+# Figures (avoiding memory over usage)
+figures/
+

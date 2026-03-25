@@ -2,7 +2,8 @@
 
 This repository contains:
 
-* `demo/`: a minimal demo generating the information lattice for a given many-body state in 2 dimensions.
+* `infolattice/`: the core importable package with the 3D lattice, physics, parallel, and plotting code.
+* `01_singlets.py`, `02_diamond_fermi_surface.py`: lightweight numbered experiment scripts that use `import infolattice as il`.
 
 ## Setup
 
@@ -27,14 +28,14 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
-`python -m pip install -e .` installs the required dependencies and makes the shared `utils/` module importable.
+`python -m pip install -e .` installs the required dependencies and makes the `infolattice` package importable.
 
 ## Running the code
 
-### Run the minimal demo
+### Run an experiment
 
-Run the demo script from the repository root, for example:
+Run an experiment script from the repository root, for example:
 
 ```bash
-python demo/main.py
+python 01_singlets.py
 ```

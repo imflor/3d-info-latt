@@ -19,7 +19,7 @@ def build_state(manifest_path, state_spec):
     kwargs = dict(state_spec.get("kwargs", {}))
     state_path = state_spec.get("state_path")
     if state_path is not None:
-        kwargs["state_path"] = str(resolve_run_path(manifest_path, state_path))
+        kwargs["correlation_path"] = str(resolve_run_path(manifest_path, state_path))
     cls = getattr(il, name, None)
     if cls is None:
         raise ValueError(f"Unknown state class '{name}' in manifest.")
@@ -30,6 +30,7 @@ def build_lattice(lattice_spec, *, parallel="none", loader=False):
     kwargs = dict(lattice_spec.get("kwargs", {}))
     kwargs["parallel"] = parallel
     kwargs["loader"] = loader
+    kwargs["precompute_subsystems"] = False
     lat = il.InformationLattice(**kwargs)
     lat.batch_size = int(lattice_spec.get("batch_size", lat.batch_size))
     return lat
@@ -73,4 +74,3 @@ def write_submit_script(submit_path, manifest_path, n_chunks, mem="4G"):
     ]
 
     submit_path.write_text("\n".join(lines))
-

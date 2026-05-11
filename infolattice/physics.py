@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 
 
@@ -65,15 +67,21 @@ class State:
 
 class TightBindingGS:
 
-    def __init__(self, n_sites, t=1):
+    def __init__(self, n_sites, t=1, correlation_path=None):
         self.tol_log = 1e-16
         self.n_sites = np.array(n_sites, dtype=int)
         self.nx, self.ny, self.nz = map(int, self.n_sites)
         self.n = int(self.n_sites.prod())
         self.t = t
-        self.h = self.hamiltonian()
-        self.e, self.v = self.diagonalize_hamiltonian()
-        self.chi = self.correlations()
+        if correlation_path is None:
+            self.h = self.hamiltonian()
+            self.e, self.v = self.diagonalize_hamiltonian()
+            self.chi = self.correlations()
+        else:
+            self.h = None
+            self.e = None
+            self.v = None
+            self.chi = self._load_correlation_matrix(correlation_path)
 
     def entanglement_entropy(self, subset):
         i = np.asarray(subset, dtype=int)
@@ -103,10 +111,24 @@ class TightBindingGS:
         v_occ = self.v[:, self.e <= 0]
         return v_occ @ v_occ.conj().T
 
+    def correlation_matrix_shape(self):
+        return self.n, self.n
+
+    def _load_correlation_matrix(self, correlation_path):
+        chi = np.load(correlation_path, mmap_mode="r")
+        if chi.shape != self.correlation_matrix_shape():
+            raise ValueError("Saved correlation matrix shape does not match n_sites.")
+        return chi
+
+    def save_correlation_matrix(self, correlation_path):
+        correlation_path = Path(correlation_path)
+        correlation_path.parent.mkdir(parents=True, exist_ok=True)
+        np.save(correlation_path, np.asarray(self.chi))
+
 
 class NodalLineGS(TightBindingGS):
 
-    def __init__(self, n_sites, periodic=False, m=2.8, v=1.0, surface_mass=0.0):
+    def __init__(self, n_sites, periodic=False, m=2.8, v=1.0, surface_mass=0.0, correlation_path=None):
         self.tol_log = 1e-16
         self.n_sites = np.array(n_sites, dtype=int)
         self.nx, self.ny, self.nz = map(int, self.n_sites)
@@ -115,9 +137,15 @@ class NodalLineGS(TightBindingGS):
         self.mass = float(m)
         self.v_orbital = float(v)
         self.surface_mass = float(surface_mass)
-        self.h = self.hamiltonian()
-        self.e, self.v = self.diagonalize_hamiltonian()
-        self.chi = self.correlations()
+        if correlation_path is None:
+            self.h = self.hamiltonian()
+            self.e, self.v = self.diagonalize_hamiltonian()
+            self.chi = self.correlations()
+        else:
+            self.h = None
+            self.e = None
+            self.v = None
+            self.chi = self._load_correlation_matrix(correlation_path)
 
     def entanglement_entropy(self, subset):
         sites = np.asarray(subset, dtype=int)
@@ -190,3 +218,6 @@ class NodalLineGS(TightBindingGS):
                         H[i, j, kp, 0, i, j, k, 1] += +v / 2.0
 
         return H.reshape(2 * self.n, 2 * self.n)
+
+    def correlation_matrix_shape(self):
+        return 2 * self.n, 2 * self.n

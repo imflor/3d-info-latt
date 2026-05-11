@@ -42,8 +42,17 @@ def main():
         run_dir = Path("cluster") / "runs" / f"tight_binding_{n_sites[0]}x{n_sites[1]}x{n_sites[2]}"
     else:
         run_dir = Path(args.run_dir)
+    data_dir = run_dir / "data"
     manifest_path = run_dir / "manifest.json"
     submit_path = Path("cluster") / "submit_array.slurm"
+    correlation_relpath = Path("data") / "correlation.npy"
+    correlation_path = run_dir / correlation_relpath
+
+    run_dir.mkdir(parents=True, exist_ok=True)
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    state = il.TightBindingGS(n_sites, t=args.t)
+    state.save_correlation_matrix(correlation_path)
 
     lat = il.InformationLattice(n_sites, parallel="slurm", loader=False)
     n_chunks = resolve_n_chunks(lat, args.n_chunks, args.chunk_size)
@@ -54,12 +63,14 @@ def main():
             "n_sites": list(n_sites),
             "t": args.t,
         },
+        state_path=correlation_relpath,
         n_chunks=n_chunks,
         shuffle_seed=args.shuffle_seed,
         output_name="tight_binding_lattice.npz",
     )
     write_submit_script(submit_path, manifest_path, manifest["n_chunks"], mem=args.mem)
 
+    print(f"Wrote correlation matrix to {correlation_path}")
     print(f"Wrote Slurm manifest to {manifest_path}")
     print(f"Updated shared submit script at {submit_path}")
     print(f"n_jobs={manifest['n_jobs']}")
@@ -71,4 +82,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -20,7 +20,8 @@ For a 3D lattice with dimensions `(Nx, Ny, Nz)`, the code enumerates all cuboid 
 The cluster workflow does not change the physics. It only changes how the entropy jobs are distributed:
 
 * the prepare step writes the job list and chunk layout
-* workers reconstruct the same free-fermion state from the manifest
+* the prepare step also saves the correlation matrix once
+* workers memory-map that saved correlation matrix
 * each worker computes only its assigned cuboid jobs
 * assembly fills the full `i_vn` and `i_local` arrays
 
@@ -140,6 +141,7 @@ with files such as:
 
 ```text
 cluster/runs/tight_binding_4x4x3/manifest.json
+cluster/runs/tight_binding_4x4x3/data/correlation.npy
 cluster/runs/tight_binding_4x4x3/data/jobs.npy
 cluster/runs/tight_binding_4x4x3/data/chunks/
 ```
@@ -153,6 +155,7 @@ python -m json.tool cluster/runs/tight_binding_4x4x3/manifest.json
 The manifest records:
 
 * the state class and its parameters
+* the saved correlation-matrix path
 * the lattice size
 * the chunk layout
 * the output paths
@@ -198,8 +201,8 @@ The worker then:
 
 1. reads the manifest
 2. loads its assigned chunk from `data/jobs.npy`
-3. reconstructs the `TightBindingGS` state from manifest parameters
-4. computes the entropy values for only its assigned cuboids
+3. opens `data/correlation.npy` in read-only memory-mapped mode
+4. computes the entropy values for only its assigned cuboids, one by one
 5. writes one chunk output file
 
 Each chunk file is written as:
@@ -217,6 +220,25 @@ Each worker also prints useful metadata to stdout, including:
 * `worker_seconds`
 
 So the Slurm log tells you both what the worker handled and how long it took.
+
+### Memory behavior inside a worker
+
+Within one worker, the subsystem jobs are processed sequentially.
+
+That means:
+
+* the worker does not keep one restricted subsystem matrix per task
+* after one subsystem entropy is finished, it moves on to the next one
+* the temporary correlation submatrix for a given subsystem is only alive for that subsystem calculation
+
+To reduce repeated large allocations:
+
+* the full correlation matrix is saved once during the prepare step
+* each worker opens that file in read-only memory-mapped mode
+* the worker does not rebuild the free-fermion state by diagonalizing the Hamiltonian again
+* the worker also avoids precomputing the full cuboid-site lookup table
+
+In practice, the main persistent object inside a worker should now be the memory-mapped full correlation matrix, while each restricted subsystem matrix is temporary.
 
 ## Step 5: assemble the final result
 
@@ -320,6 +342,7 @@ The fix is simple:
 The main outputs are:
 
 * manifest: `cluster/runs/<run_name>/manifest.json`
+* saved correlation matrix: `cluster/runs/<run_name>/data/correlation.npy`
 * job list: `cluster/runs/<run_name>/data/jobs.npy`
 * chunk outputs: `cluster/runs/<run_name>/data/chunks/chunk_*.npz`
 * assembled lattice: `cluster/runs/<run_name>/data/tight_binding_lattice.npz`

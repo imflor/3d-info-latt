@@ -40,9 +40,7 @@ def main():
 
     state = build_state(manifest_path, manifest["state"])
     lat = build_lattice(manifest["lattice"], parallel="none", loader=False)
-    lat.compute_von_neumann_information(state, jobs=jobs)
-
-    values = np.asarray([lat.i_vn[lx, ly, lz, nx, ny, nz] for lx, ly, lz, nx, ny, nz in jobs], dtype=float)
+    values = lat.entropy_values_for_jobs(state, jobs)
     output_path = resolve_run_path(manifest_path, chunk["output"])
     output_path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = output_path.parent / f"{output_path.stem}.tmp.npz"
@@ -61,4 +59,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

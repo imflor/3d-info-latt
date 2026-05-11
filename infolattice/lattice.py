@@ -12,16 +12,17 @@ class InformationLattice:
     Includes local and Slurm-oriented computation helpers.
     """
 
-    def __init__(self, n_sites, parallel="joblib", loader=True):
+    def __init__(self, n_sites, parallel="joblib", loader=True, precompute_subsystems=True):
         self.n_sites = np.array(n_sites, dtype=int)
         self.Nx, self.Ny, self.Nz = map(int, self.n_sites)
         self.n = int(self.n_sites.prod())
         self.parallel = normalize_parallel(parallel)
         self.loader = loader
         self.batch_size = 25
+        self.precompute_subsystems = bool(precompute_subsystems)
 
         self.physical_lattice = np.arange(self.n).reshape(self.Nx, self.Ny, self.Nz)
-        self.subsystems_lattice = self._generate_subsystems_lattice()
+        self.subsystems_lattice = self._generate_subsystems_lattice() if self.precompute_subsystems else None
         self.i_vn = np.zeros((self.Nx + 2, self.Ny + 2, self.Nz + 2, self.Nx + 1, self.Ny + 1, self.Nz + 1))
         self.i_local = np.zeros((self.Nx, self.Ny, self.Nz, self.Nx, self.Ny, self.Nz))
         self._reset_i_vn()
@@ -101,6 +102,20 @@ class InformationLattice:
                                 )
         return subsystems_lattice
 
+    def _subsystem_sites(self, lx, ly, lz, nx, ny, nz):
+        n_sites = (lx + 1) * (ly + 1) * (lz + 1)
+        if self.subsystems_lattice is not None:
+            return self.subsystems_lattice[lx, ly, lz, nx, ny, nz, :n_sites]
+        return self._get_subsystem_sites((nx, ny, nz), (lx, ly, lz))
+
+    def entropy_values_for_jobs(self, state, jobs):
+        values = np.empty(len(jobs), dtype=float)
+        for idx, (lx, ly, lz, nx, ny, nz) in enumerate(jobs):
+            n_sites = (lx + 1) * (ly + 1) * (lz + 1)
+            sites = self._subsystem_sites(lx, ly, lz, nx, ny, nz)
+            values[idx] = n_sites - state.entanglement_entropy(sites)
+        return values
+
     def compute_von_neumann_information(self, state, batch_size=None, jobs=None):
         batch_size = self.batch_size if batch_size is None else int(batch_size)
         jobs_given = jobs is not None
@@ -120,7 +135,7 @@ class InformationLattice:
 
         def i_vn_function(lx, ly, lz, nx, ny, nz):
             n_sites = (lx + 1) * (ly + 1) * (lz + 1)
-            sites = self.subsystems_lattice[lx, ly, lz, nx, ny, nz, :n_sites]
+            sites = self._subsystem_sites(lx, ly, lz, nx, ny, nz)
             return n_sites - state.entanglement_entropy(sites)
 
         for job, val in map_jobs(

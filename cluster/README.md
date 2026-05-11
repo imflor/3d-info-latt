@@ -2,7 +2,7 @@
 
 Run all commands below from the repository root.
 
-This cluster workflow is for the existing 3D free-fermion tight-binding calculation. It parallelizes the subsystem entropy jobs over Slurm array workers and then assembles the final information-lattice arrays from the chunk outputs.
+This cluster workflow is for the free-fermion state classes in this repository. It parallelizes the subsystem entropy jobs over Slurm array workers and then assembles the final information-lattice arrays from the chunk outputs.
 
 The workflow is:
 
@@ -15,7 +15,10 @@ The workflow is:
 
 ## What the workflow computes
 
-For a 3D lattice with dimensions `(Nx, Ny, Nz)`, the code enumerates all cuboid subsystems and computes their entropies using the existing `TightBindingGS.entanglement_entropy(...)` route.
+For a 3D lattice with dimensions `(Nx, Ny, Nz)`, the code enumerates all cuboid subsystems and computes their entropies using the chosen state class from the manifest, such as:
+
+* `TightBindingGS`
+* `NodalLineGS`
 
 The cluster workflow does not change the physics. It only changes how the entropy jobs are distributed:
 
@@ -30,13 +33,15 @@ The cluster workflow does not change the physics. It only changes how the entrop
 Use:
 
 ```bash
-python -m cluster.prepare_tight_binding
+python -m cluster.prepare_state --state-class TightBindingGS
 ```
+
+For backward compatibility, `python -m cluster.prepare_tight_binding` still prepares `TightBindingGS` with the same chunking and manifest workflow.
 
 By default this prepares a modest example with:
 
 * `n_sites = (3, 3, 2)`
-* `t = 1.0`
+* the default parameters of the chosen state class
 
 and writes the run into:
 
@@ -52,9 +57,31 @@ The prepare script accepts the following user-facing parameters:
   Meaning: the 3D lattice dimensions.
   Example: `--n-sites 4 4 3`
 
+* `--state-class STATE_CLASS`
+  Meaning: which free-fermion model to prepare.
+  Currently supported:
+  * `TightBindingGS`
+  * `NodalLineGS`
+  Example: `--state-class NodalLineGS`
+
 * `--t FLOAT`
-  Meaning: nearest-neighbor hopping amplitude in the tight-binding Hamiltonian.
+  Meaning: nearest-neighbor hopping amplitude for `TightBindingGS`.
   Example: `--t 1.0`
+
+* `--periodic`
+  Meaning: use periodic boundaries for `NodalLineGS`.
+
+* `--m FLOAT`
+  Meaning: mass parameter for `NodalLineGS`.
+  Example: `--m 2.8`
+
+* `--v FLOAT`
+  Meaning: orbital-mixing parameter for `NodalLineGS`.
+  Example: `--v 1.0`
+
+* `--surface-mass FLOAT`
+  Meaning: boundary orbital-mixing mass for `NodalLineGS`.
+  Example: `--surface-mass 0.0`
 
 * `--n-chunks INT`
   Meaning: the exact number of Slurm chunks to create.
@@ -78,13 +105,14 @@ The prepare script accepts the following user-facing parameters:
 If `--run-dir` is not given, the prepare step names the run directory as:
 
 ```text
-cluster/runs/tight_binding_{Nx}x{Ny}x{Nz}
+cluster/runs/<state_slug>_{Nx}x{Ny}x{Nz}
 ```
 
 For example:
 
 * `cluster/runs/tight_binding_3x3x2`
 * `cluster/runs/tight_binding_4x4x3`
+* `cluster/runs/nodal_line_4x4x3`
 
 ### How chunking works
 
@@ -128,7 +156,7 @@ After preparing a run, inspect the output directory before submitting.
 For example:
 
 ```bash
-python -m cluster.prepare_tight_binding --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
+python -m cluster.prepare_state --state-class TightBindingGS --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
 ```
 
 This will create:
@@ -201,9 +229,10 @@ The worker then:
 
 1. reads the manifest
 2. loads its assigned chunk from `data/jobs.npy`
-3. opens `data/correlation.npy` in read-only memory-mapped mode
-4. computes the entropy values for only its assigned cuboids, one by one
-5. writes one chunk output file
+3. instantiates the state class named in the manifest
+4. opens `data/correlation.npy` in read-only memory-mapped mode
+5. computes the entropy values for only its assigned cuboids, one by one
+6. writes one chunk output file
 
 Each chunk file is written as:
 
@@ -287,7 +316,7 @@ Here is a full start-to-finish example you can copy.
 ### 1. Prepare
 
 ```bash
-python -m cluster.prepare_tight_binding --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
+python -m cluster.prepare_state --state-class TightBindingGS --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
 ```
 
 ### 2. Inspect the manifest
@@ -312,6 +341,26 @@ python -m cluster.assemble --manifest cluster/runs/tight_binding_4x4x3/manifest.
 
 ```text
 cluster/runs/tight_binding_4x4x3/data/tight_binding_lattice.npz
+```
+
+## Nodal-line example
+
+Here is the analogous prepare command for `NodalLineGS`:
+
+```bash
+python -m cluster.prepare_state --state-class NodalLineGS --n-sites 4 4 3 --n-chunks 100 --m 2.8 --v 1.0 --surface-mass 0.0 --mem 16G
+```
+
+If `--run-dir` is not given, this will write to:
+
+```text
+cluster/runs/nodal_line_4x4x3/
+```
+
+and the assembled output will be:
+
+```text
+cluster/runs/nodal_line_4x4x3/data/nodal_line_lattice.npz
 ```
 
 ## Sync results back locally

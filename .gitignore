@@ -73,3 +73,6 @@ __pypackages__/
 # Figures (avoiding memory over usage)
 figures/
 
+# Simulations (avoiding memory over usage)
+cluster/runs/
+

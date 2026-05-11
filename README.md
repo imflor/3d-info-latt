@@ -57,7 +57,7 @@ These scripts are meant as simple local examples and do not use the cluster work
 
 ## Cluster workflow
 
-The cluster workflow is for the free-fermion tight-binding case only. It does not add any DMRG or interacting-state machinery to this repository.
+The cluster workflow is for the free-fermion state classes in this repository. It does not add any DMRG or interacting-state machinery.
 
 The workflow is:
 
@@ -73,10 +73,10 @@ The operational guide lives in:
 
 ### Quick cluster example
 
-Prepare a `4 x 4 x 3` tight-binding run split into `100` chunks:
+Prepare a `4 x 4 x 3` run for `TightBindingGS` split into `100` chunks:
 
 ```bash
-python -m cluster.prepare_tight_binding --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
+python -m cluster.prepare_state --state-class TightBindingGS --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
 ```
 
 This writes a run directory such as:
@@ -119,6 +119,18 @@ The assembled data is written to:
 
 ```text
 cluster/runs/tight_binding_4x4x3/data/tight_binding_lattice.npz
+```
+
+For a nodal-line run, you would instead use for example:
+
+```bash
+python -m cluster.prepare_state --state-class NodalLineGS --n-sites 4 4 3 --n-chunks 100 --m 2.8 --v 1.0 --surface-mass 0.0 --mem 16G
+```
+
+For backward compatibility, the old tight-binding-only entry point still works:
+
+```bash
+python -m cluster.prepare_tight_binding --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
 ```
 
 ## Where to look next

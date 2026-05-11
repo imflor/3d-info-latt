@@ -58,7 +58,7 @@ def write_submit_script(submit_path, manifest_path, n_chunks, mem="4G"):
         f"#SBATCH --mem={mem}",
         "#SBATCH --output=cluster/logs/%x_%A_%a.out",
         "",
-        "# This file is overwritten by cluster.prepare_tight_binding.",
+        "# This file is overwritten by cluster.prepare_state or cluster.prepare_tight_binding.",
         "# Submit directly with:",
         "#   sbatch cluster/submit_array.slurm",
         "# Or override the manifest explicitly with:",

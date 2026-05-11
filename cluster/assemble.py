@@ -20,6 +20,13 @@ def main(default_manifest=None):
     lat = build_lattice(manifest["lattice"], parallel="slurm", loader=False)
     lat.load_slurm_results(manifest_path)
 
+    peak_memories = []
+    for chunk in manifest["chunks"]:
+        chunk_path = resolve_run_path(manifest_path, chunk["output"])
+        with np.load(chunk_path) as data:
+            if "peak_rss_mb" in data:
+                peak_memories.append((int(chunk["chunk_id"]), float(data["peak_rss_mb"])))
+
     output_path = resolve_run_path(manifest_path, manifest["data"]["assembled"])
     output_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
@@ -30,8 +37,11 @@ def main(default_manifest=None):
     )
 
     print(f"Assembled lattice to {output_path}")
+    if peak_memories:
+        chunk_id, peak_rss_mb = max(peak_memories, key=lambda x: x[1])
+        print(f"max_peak_rss_mb={peak_rss_mb:.3f}")
+        print(f"max_peak_rss_chunk_id={chunk_id}")
 
 
 if __name__ == "__main__":
     main()
-

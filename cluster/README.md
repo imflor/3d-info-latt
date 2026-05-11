@@ -218,8 +218,12 @@ Each worker also prints useful metadata to stdout, including:
 * `subsystem_shapes`
 * `subsystem_volumes`
 * `worker_seconds`
+* `peak_rss_raw`
+* `peak_rss_mb`
+* `peak_rss_gb`
 
 So the Slurm log tells you both what the worker handled and how long it took.
+At the end of the log, each worker now also reports the largest resident memory usage reached during the lifetime of that worker process.
 
 ### Memory behavior inside a worker
 
@@ -240,6 +244,13 @@ To reduce repeated large allocations:
 
 In practice, the main persistent object inside a worker should now be the memory-mapped full correlation matrix, while each restricted subsystem matrix is temporary.
 
+The worker stores this peak memory metadata in its chunk output file as:
+
+* `peak_rss_raw`
+* `peak_rss_bytes`
+* `peak_rss_mb`
+* `worker_seconds`
+
 ## Step 5: assemble the final result
 
 After all chunk files exist, assemble them into the full lattice arrays:
@@ -255,6 +266,7 @@ This step:
 3. fills `i_vn`
 4. computes `i_local`
 5. writes the assembled result as a compressed `.npz`
+6. prints the maximum recorded worker peak memory when that metadata is available
 
 For the example above, the assembled output is:
 
@@ -346,6 +358,8 @@ The main outputs are:
 * job list: `cluster/runs/<run_name>/data/jobs.npy`
 * chunk outputs: `cluster/runs/<run_name>/data/chunks/chunk_*.npz`
 * assembled lattice: `cluster/runs/<run_name>/data/tight_binding_lattice.npz`
+
+Each chunk `.npz` now also contains worker metadata, including runtime and peak RSS.
 
 ### Reassembling without rerunning workers
 

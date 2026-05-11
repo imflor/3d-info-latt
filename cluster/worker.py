@@ -1,11 +1,24 @@
 import argparse
 import os
+import resource
+import sys
 import time
 from pathlib import Path
 
 import numpy as np
 
 from .common import build_lattice, build_state, load_chunk_jobs, load_manifest, resolve_run_path
+
+
+def peak_rss_raw():
+    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+
+
+def peak_rss_bytes(raw_value):
+    raw_value = int(raw_value)
+    if sys.platform == "darwin":
+        return raw_value
+    return raw_value * 1024
 
 
 def main():
@@ -44,17 +57,29 @@ def main():
     output_path = resolve_run_path(manifest_path, chunk["output"])
     output_path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = output_path.parent / f"{output_path.stem}.tmp.npz"
+    worker_seconds = time.perf_counter() - start_time
+    rss_raw = peak_rss_raw()
+    rss_bytes = peak_rss_bytes(rss_raw)
+    rss_mb = rss_bytes / (1024 ** 2)
+    rss_gb = rss_bytes / (1024 ** 3)
 
     np.savez_compressed(
         tmp_path,
         chunk_id=int(chunk_id),
         jobs=np.asarray(jobs, dtype=int),
         values=values,
+        worker_seconds=float(worker_seconds),
+        peak_rss_raw=int(rss_raw),
+        peak_rss_bytes=int(rss_bytes),
+        peak_rss_mb=float(rss_mb),
     )
     tmp_path.replace(output_path)
 
     print(f"Wrote chunk {chunk_id} to {output_path}")
-    print(f"worker_seconds={time.perf_counter() - start_time:.6f}")
+    print(f"worker_seconds={worker_seconds:.6f}")
+    print(f"peak_rss_raw={int(rss_raw)}")
+    print(f"peak_rss_mb={rss_mb:.3f}")
+    print(f"peak_rss_gb={rss_gb:.3f}")
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .parallel import map_jobs, normalize_parallel, weighted_chunk_indices
+from .parallel import greedy_chunk_indices, map_jobs, normalize_parallel
 
 
 class InformationLattice:
@@ -54,12 +54,21 @@ class InformationLattice:
             mask[lx, ly, lz, nx, ny, nz] = True
         return mask
 
-    def _effective_subsystem_size(self, lx, ly, lz):
-        n_subsystem = (int(lx) + 1) * (int(ly) + 1) * (int(lz) + 1)
-        return min(n_subsystem, self.n - n_subsystem)
+    @staticmethod
+    def _subsystem_volume(lx, ly, lz):
+        return (int(lx) + 1) * (int(ly) + 1) * (int(lz) + 1)
 
-    def _entropy_job_weight(self, lx, ly, lz):
-        return 1 << self._effective_subsystem_size(lx, ly, lz)
+    def _entropy_job_load(self, lx, ly, lz):
+        """
+        Heuristic load model for free-fermion entropies.
+
+        The current entropy path diagonalizes the restricted correlation matrix on the
+        literal cuboid sites, so the matrix dimension is the cuboid volume itself.
+        We therefore estimate memory by m^2 and eigensolver time by m^3, and use
+        greedy balancing with memory as the primary load and time as the tie-breaker.
+        """
+        m = self._subsystem_volume(lx, ly, lz)
+        return m ** 2, m ** 3
 
     def _reset_i_vn(self):
         self.i_vn.fill(0.0)
@@ -162,8 +171,8 @@ class InformationLattice:
         if n_chunks <= 0:
             raise ValueError("n_chunks must be positive")
 
-        weights = [self._entropy_job_weight(lx, ly, lz) for lx, ly, lz, _, _, _ in jobs]
-        chunk_indices, chunk_weights = weighted_chunk_indices(weights, n_chunks)
+        loads = [self._entropy_job_load(lx, ly, lz) for lx, ly, lz, _, _, _ in jobs]
+        chunk_indices, chunk_loads = greedy_chunk_indices(loads, n_chunks)
 
         ordered_jobs = []
         chunks = []
@@ -180,7 +189,8 @@ class InformationLattice:
                 "start": int(start),
                 "stop": int(stop),
                 "n_jobs": int(len(chunk_jobs)),
-                "estimated_weight": int(chunk_weights[chunk_id]),
+                "estimated_memory_load": int(chunk_loads[chunk_id][0]),
+                "estimated_time_load": int(chunk_loads[chunk_id][1]),
                 "output": output.as_posix(),
             })
             cursor = stop
@@ -206,8 +216,10 @@ class InformationLattice:
                 "assembled": (Path("data") / output_name).as_posix(),
             },
             "chunking": {
-                "strategy": "weighted_greedy",
-                "weight": "2**effective_subsystem_volume",
+                "strategy": "greedy_memory_time",
+                "matrix_size": "subsystem_volume",
+                "memory_load": "subsystem_volume**2",
+                "time_load": "subsystem_volume**3",
             },
             "shuffle_seed": None if shuffle_seed is None else int(shuffle_seed),
             "n_jobs": int(len(jobs)),

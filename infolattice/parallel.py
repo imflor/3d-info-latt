@@ -40,26 +40,30 @@ def normalize_parallel(parallel):
     return mode
 
 
-def weighted_chunk_indices(weights, n_chunks):
-    weights = [int(w) for w in weights]
+def greedy_chunk_indices(loads, n_chunks):
+    loads = [tuple(int(x) for x in load) for load in loads]
     n_chunks = int(n_chunks)
     if n_chunks <= 0:
         raise ValueError("n_chunks must be positive")
 
     chunk_indices = [[] for _ in range(n_chunks)]
-    chunk_weights = [0 for _ in range(n_chunks)]
-    heap = [(0, chunk_id) for chunk_id in range(n_chunks)]
+    chunk_loads = [(0, 0) for _ in range(n_chunks)]
+    heap = [((0, 0), chunk_id) for chunk_id in range(n_chunks)]
     heapq.heapify(heap)
 
-    order = sorted(range(len(weights)), key=lambda idx: weights[idx], reverse=True)
+    order = sorted(range(len(loads)), key=lambda idx: loads[idx], reverse=True)
     for idx in order:
-        total_weight, chunk_id = heapq.heappop(heap)
+        total_load, chunk_id = heapq.heappop(heap)
         chunk_indices[chunk_id].append(idx)
-        total_weight += weights[idx]
-        chunk_weights[chunk_id] = total_weight
-        heapq.heappush(heap, (total_weight, chunk_id))
+        job_load = loads[idx]
+        total_load = (
+            total_load[0] + job_load[0],
+            total_load[1] + job_load[1],
+        )
+        chunk_loads[chunk_id] = total_load
+        heapq.heappush(heap, (total_load, chunk_id))
 
-    return chunk_indices, chunk_weights
+    return chunk_indices, chunk_loads
 
 
 def map_jobs(jobs, f, *, parallel="joblib", batch_size=25, n_jobs=-1, loader=False, desc="Computing i_von_neumann"):

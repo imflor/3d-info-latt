@@ -92,23 +92,31 @@ The prepare step does not create equal-size chunks by job count.
 Instead it:
 
 1. enumerates all cuboid entropy jobs
-2. assigns each job a heuristic weight
+2. estimates the restricted correlation-matrix size for each job
 3. creates exactly `n_chunks` chunks
-4. uses weighted greedy assignment to balance heavy jobs across workers
+4. uses greedy assignment to balance memory-heavy and time-heavy jobs across workers
 
-The balancing weight is:
-
-```text
-2**m
-```
-
-where
+For a cuboid with shape `(lx + 1, ly + 1, lz + 1)`, define:
 
 ```text
-m = min(n_subsystem, N - n_subsystem)
+m = (lx + 1) * (ly + 1) * (lz + 1)
 ```
 
-and `n_subsystem = (lx + 1) * (ly + 1) * (lz + 1)`.
+This is the actual dimension of the correlation matrix that is diagonalized in the current free-fermion entropy code.
+
+The chunker then uses the heuristic loads:
+
+```text
+memory_load = m**2
+time_load   = m**3
+```
+
+and greedily assigns the next largest job to the currently lightest chunk, using:
+
+* memory load as the primary balancing target
+* time load as the tie-breaker
+
+This is meant to better reflect the free-fermion bottlenecks than the old interacting-style exponential heuristic, and in particular to reduce the chance that several very large correlation-matrix jobs land on the same worker.
 
 This is only a scheduling heuristic. The actual physics calculation is unchanged.
 

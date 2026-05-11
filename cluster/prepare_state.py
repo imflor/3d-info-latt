@@ -56,7 +56,8 @@ def build_state_kwargs(args, state_class, n_sites):
 
 def main(default_state_class="TightBindingGS", allow_state_class=True):
     parser = argparse.ArgumentParser(description="Prepare a Slurm manifest for a 3D free-fermion information-lattice run.")
-    parser.add_argument("--run-dir", default=None, help="Directory that will hold the manifest and chunk data.")
+    parser.add_argument("--run-dir", default=None, help="Parent directory that will hold the run folder. Defaults to cluster/runs/.")
+    parser.add_argument("--run-name", default=None, help="Simulation ID and run-folder name.")
     parser.add_argument("--n-sites", type=int, nargs=3, default=(3, 3, 2), metavar=("NX", "NY", "NZ"), help="3D lattice dimensions.")
     if allow_state_class:
         parser.add_argument(
@@ -80,10 +81,16 @@ def main(default_state_class="TightBindingGS", allow_state_class=True):
     n_sites = tuple(int(x) for x in args.n_sites)
     slug = state_slug(state_class)
 
-    if args.run_dir is None:
-        run_dir = Path("cluster") / "runs" / f"{slug}_{n_sites[0]}x{n_sites[1]}x{n_sites[2]}"
-    else:
-        run_dir = Path(args.run_dir)
+    run_name = args.run_name
+    if run_name is None:
+        run_name = f"{slug}_{n_sites[0]}x{n_sites[1]}x{n_sites[2]}"
+
+    run_name_path = Path(run_name)
+    if run_name_path.name != run_name or run_name in {".", ".."}:
+        raise ValueError("--run-name must be a single folder name, not a path.")
+
+    base_run_dir = Path("cluster") / "runs" if args.run_dir is None else Path(args.run_dir)
+    run_dir = base_run_dir / run_name
     data_dir = run_dir / "data"
     manifest_path = run_dir / "manifest.json"
     submit_path = Path("cluster") / "submit_array.slurm"
@@ -106,15 +113,17 @@ def main(default_state_class="TightBindingGS", allow_state_class=True):
     n_chunks = resolve_n_chunks(lat, args.n_chunks, args.chunk_size)
     manifest = lat.write_slurm_manifest(
         manifest_path,
+        run_name=run_name,
         state_name=state_class,
         state_kwargs=state_kwargs,
         state_path=correlation_relpath,
         n_chunks=n_chunks,
         shuffle_seed=args.shuffle_seed,
-        output_name=f"{slug}_lattice.npz",
+        output_name="lattice.npz",
     )
     write_submit_script(submit_path, manifest_path, manifest["n_chunks"], mem=args.mem)
 
+    print(f"run_name={run_name}")
     print(f"state_class={state_class}")
     print(f"Wrote correlation matrix to {correlation_path}")
     print(f"Wrote Slurm manifest to {manifest_path}")

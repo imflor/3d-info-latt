@@ -97,22 +97,51 @@ The prepare script accepts the following user-facing parameters:
   Example: `--shuffle-seed 7`
 
 * `--run-dir PATH`
-  Meaning: optional explicit output directory for the run.
-  If omitted, the run directory is chosen automatically.
+  Meaning: optional parent directory for run folders.
+  If omitted, the parent directory defaults to `cluster/runs/`.
+
+* `--run-name NAME`
+  Meaning: simulation ID and run-folder name.
+  Example: `--run-name nodal_line_surface_scan`
+  If omitted, the ID is chosen automatically from the state class and geometry.
 
 ### Automatic run-directory naming
 
-If `--run-dir` is not given, the prepare step names the run directory as:
+If `--run-name` is not given, the prepare step chooses the simulation ID as:
 
 ```text
-cluster/runs/<state_slug>_{Nx}x{Ny}x{Nz}
+<state_slug>_{Nx}x{Ny}x{Nz}
 ```
 
-For example:
+and writes the run to:
+
+```text
+<run_dir>/<run_name>
+```
+
+The default parent directory is:
+
+```text
+cluster/runs/
+```
+
+So for example:
 
 * `cluster/runs/tight_binding_3x3x2`
 * `cluster/runs/tight_binding_4x4x3`
 * `cluster/runs/nodal_line_4x4x3`
+
+If `--run-name custom_name` is given, the run directory becomes:
+
+```text
+cluster/runs/custom_name
+```
+
+If `--run-dir some/path` is given, it becomes the parent directory, so the run directory is:
+
+```text
+some/path/<run_name>
+```
 
 ### How chunking works
 
@@ -159,6 +188,12 @@ For example:
 python -m cluster.prepare_state --state-class TightBindingGS --n-sites 4 4 3 --n-chunks 100 --t 1.0 --mem 16G
 ```
 
+or with a custom run name:
+
+```bash
+python -m cluster.prepare_state --state-class NodalLineGS --n-sites 4 4 3 --n-chunks 100 --m 2.8 --v 1.0 --surface-mass 0.0 --run-name nodal_line_surface_scan --mem 16G
+```
+
 This will create:
 
 ```text
@@ -182,6 +217,7 @@ python -m json.tool cluster/runs/tight_binding_4x4x3/manifest.json
 
 The manifest records:
 
+* the run name / simulation ID
 * the state class and its parameters
 * the saved correlation-matrix path
 * the lattice size
@@ -300,7 +336,7 @@ This step:
 For the example above, the assembled output is:
 
 ```text
-cluster/runs/tight_binding_4x4x3/data/tight_binding_lattice.npz
+cluster/runs/tight_binding_4x4x3/data/lattice.npz
 ```
 
 That file contains:
@@ -340,7 +376,7 @@ python -m cluster.assemble --manifest cluster/runs/tight_binding_4x4x3/manifest.
 ### 5. Result location
 
 ```text
-cluster/runs/tight_binding_4x4x3/data/tight_binding_lattice.npz
+cluster/runs/tight_binding_4x4x3/data/lattice.npz
 ```
 
 ## Nodal-line example
@@ -348,19 +384,25 @@ cluster/runs/tight_binding_4x4x3/data/tight_binding_lattice.npz
 Here is the analogous prepare command for `NodalLineGS`:
 
 ```bash
-python -m cluster.prepare_state --state-class NodalLineGS --n-sites 4 4 3 --n-chunks 100 --m 2.8 --v 1.0 --surface-mass 0.0 --mem 16G
+python -m cluster.prepare_state --state-class NodalLineGS --n-sites 4 4 3 --n-chunks 100 --m 2.8 --v 1.0 --surface-mass 0.0 --run-name nodal_line_surface_scan --mem 16G
 ```
 
-If `--run-dir` is not given, this will write to:
+With `--run-name nodal_line_surface_scan`, this will write to:
 
 ```text
-cluster/runs/nodal_line_4x4x3/
+cluster/runs/nodal_line_surface_scan/
 ```
 
 and the assembled output will be:
 
 ```text
-cluster/runs/nodal_line_4x4x3/data/nodal_line_lattice.npz
+cluster/runs/nodal_line_surface_scan/data/lattice.npz
+```
+
+If you omit `--run-name`, the automatic default is still:
+
+```text
+cluster/runs/nodal_line_4x4x3/
 ```
 
 ## Sync results back locally
@@ -406,7 +448,7 @@ The main outputs are:
 * saved correlation matrix: `cluster/runs/<run_name>/data/correlation.npy`
 * job list: `cluster/runs/<run_name>/data/jobs.npy`
 * chunk outputs: `cluster/runs/<run_name>/data/chunks/chunk_*.npz`
-* assembled lattice: `cluster/runs/<run_name>/data/tight_binding_lattice.npz`
+* assembled lattice: `cluster/runs/<run_name>/data/lattice.npz`
 
 Each chunk `.npz` now also contains worker metadata, including runtime and peak RSS.
 

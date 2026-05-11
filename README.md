@@ -118,7 +118,7 @@ python -m cluster.assemble --manifest cluster/runs/tight_binding_4x4x3/manifest.
 The assembled data is written to:
 
 ```text
-cluster/runs/tight_binding_4x4x3/data/tight_binding_lattice.npz
+cluster/runs/tight_binding_4x4x3/data/lattice.npz
 ```
 
 For a nodal-line run, you would instead use for example:
@@ -126,6 +126,14 @@ For a nodal-line run, you would instead use for example:
 ```bash
 python -m cluster.prepare_state --state-class NodalLineGS --n-sites 4 4 3 --n-chunks 100 --m 2.8 --v 1.0 --surface-mass 0.0 --mem 16G
 ```
+
+If you want to choose the run folder name explicitly, you can now do for example:
+
+```bash
+python -m cluster.prepare_state --state-class NodalLineGS --n-sites 4 4 3 --n-chunks 100 --m 2.8 --v 1.0 --surface-mass 0.0 --run-name nodal_line_surface_scan --mem 16G
+```
+
+Here `--run-name` is the simulation ID. It determines the run folder name, and the workflow then uses fixed filenames inside that folder such as `manifest.json` and `data/lattice.npz`.
 
 For backward compatibility, the old tight-binding-only entry point still works:
 

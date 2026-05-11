@@ -161,6 +161,7 @@ class InformationLattice:
         self,
         manifest_path,
         *,
+        run_name=None,
         state_name,
         state_kwargs=None,
         state_path=None,
@@ -215,6 +216,7 @@ class InformationLattice:
 
         manifest = {
             "version": 1,
+            "run_name": None if run_name is None else str(run_name),
             "state": {
                 "name": state_name,
                 "kwargs": {} if state_kwargs is None else state_kwargs,

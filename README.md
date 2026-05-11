@@ -3,6 +3,7 @@
 This repository contains:
 
 * `infolattice/`: the core importable package with the 3D lattice, physics, parallel, and plotting code.
+* `cluster/`: the Slurm-oriented prepare / worker / assemble workflow for free-fermion entropy jobs.
 * `01_singlets.py`, `02_diamond_fermi_surface.py`: lightweight numbered experiment scripts that use `import infolattice as il`.
 
 ## Setup

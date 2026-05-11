@@ -1,10 +1,11 @@
 from .lattice import InformationLattice
-from .physics import State, TightBindingGS, entropy_stable, random_singlets
+from .physics import NodalLineGS, State, TightBindingGS, entropy_stable, random_singlets
 
 __all__ = [
     "InformationLattice",
     "State",
     "TightBindingGS",
+    "NodalLineGS",
     "entropy_stable",
     "random_singlets",
     "plot_3d_array",

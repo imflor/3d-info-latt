@@ -102,3 +102,91 @@ class TightBindingGS:
     def correlations(self):
         v_occ = self.v[:, self.e <= 0]
         return v_occ @ v_occ.conj().T
+
+
+class NodalLineGS(TightBindingGS):
+
+    def __init__(self, n_sites, periodic=False, m=2.8, v=1.0, surface_mass=0.0):
+        self.tol_log = 1e-16
+        self.n_sites = np.array(n_sites, dtype=int)
+        self.nx, self.ny, self.nz = map(int, self.n_sites)
+        self.n = int(self.n_sites.prod())
+        self.periodic = bool(periodic)
+        self.mass = float(m)
+        self.v_orbital = float(v)
+        self.surface_mass = float(surface_mass)
+        self.h = self.hamiltonian()
+        self.e, self.v = self.diagonalize_hamiltonian()
+        self.chi = self.correlations()
+
+    def entanglement_entropy(self, subset):
+        sites = np.asarray(subset, dtype=int)
+        orbitals = np.empty(2 * len(sites), dtype=int)
+        orbitals[0::2] = 2 * sites
+        orbitals[1::2] = 2 * sites + 1
+        C = self.chi[np.ix_(orbitals, orbitals)]
+        s = np.linalg.eigvalsh(C)
+        S = entropy_stable(s, self.tol_log)
+        Sp = entropy_stable(1 - s, self.tol_log)
+        return S.sum() + Sp.sum()
+
+    def hamiltonian(self, periodic=None, m=None, v=None, surface_mass=None):
+        periodic = self.periodic if periodic is None else bool(periodic)
+        m = self.mass if m is None else float(m)
+        v = self.v_orbital if v is None else float(v)
+        surface_mass = self.surface_mass if surface_mass is None else float(surface_mass)
+
+        nx, ny, nz = self.nx, self.ny, self.nz
+        H = np.zeros((nx, ny, nz, 2, nx, ny, nz, 2), dtype=float)
+
+        for i in range(nx):
+            for j in range(ny):
+                for k in range(nz):
+                    H[i, j, k, 0, i, j, k, 0] += +m
+                    H[i, j, k, 1, i, j, k, 1] += -m
+
+                    if surface_mass != 0.0:
+                        on_boundary = (
+                            i == 0 or i == nx - 1
+                            or j == 0 or j == ny - 1
+                            or k == 0 or k == nz - 1
+                        )
+                        if on_boundary:
+                            H[i, j, k, 0, i, j, k, 1] += surface_mass
+                            H[i, j, k, 1, i, j, k, 0] += surface_mass
+
+                    ip = i + 1
+                    if ip < nx or periodic:
+                        ip %= nx
+                        H[i, j, k, 0, ip, j, k, 0] += -0.5
+                        H[ip, j, k, 0, i, j, k, 0] += -0.5
+
+                        H[i, j, k, 1, ip, j, k, 1] += +0.5
+                        H[ip, j, k, 1, i, j, k, 1] += +0.5
+
+                    jp = j + 1
+                    if jp < ny or periodic:
+                        jp %= ny
+                        H[i, j, k, 0, i, jp, k, 0] += -0.5
+                        H[i, jp, k, 0, i, j, k, 0] += -0.5
+
+                        H[i, j, k, 1, i, jp, k, 1] += +0.5
+                        H[i, jp, k, 1, i, j, k, 1] += +0.5
+
+                    kp = k + 1
+                    if kp < nz or periodic:
+                        kp %= nz
+
+                        H[i, j, k, 0, i, j, kp, 0] += -0.5
+                        H[i, j, kp, 0, i, j, k, 0] += -0.5
+
+                        H[i, j, k, 1, i, j, kp, 1] += +0.5
+                        H[i, j, kp, 1, i, j, k, 1] += +0.5
+
+                        H[i, j, k, 0, i, j, kp, 1] += -v / 2.0
+                        H[i, j, kp, 1, i, j, k, 0] += -v / 2.0
+
+                        H[i, j, k, 1, i, j, kp, 0] += +v / 2.0
+                        H[i, j, kp, 0, i, j, k, 1] += +v / 2.0
+
+        return H.reshape(2 * self.n, 2 * self.n)

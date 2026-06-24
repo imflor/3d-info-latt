@@ -75,4 +75,4 @@ figures/
 
 # Simulations (avoiding memory over usage)
 cluster/runs/
-
+benchmark/runs/

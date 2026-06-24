@@ -1,0 +1,15 @@
+chunk_id=27
+n_jobs=1
+subsystem_shapes=[[5, 7, 8]]
+subsystem_volumes=[280]
+Wrote benchmark chunk 27 to benchmark/runs/bench_nodal_line_L8_periodic/data/chunks/chunk_00027.npz
+manifest_load_seconds=0.000482
+load_jobs_seconds=0.000468
+build_state_seconds=0.001771
+build_lattice_seconds=0.001733
+entropy_total_seconds=0.028749
+write_output_seconds=0.009754
+worker_seconds=0.038949
+peak_rss_raw=48260
+peak_rss_mb=47.129
+peak_rss_gb=0.046

@@ -1,0 +1,107 @@
+{
+  "state_class": "NodalLineGS",
+  "n_sites": [
+    8,
+    8,
+    8
+  ],
+  "periodic": false,
+  "state_kwargs": {
+    "n_sites": [
+      8,
+      8,
+      8
+    ],
+    "periodic": false,
+    "m": 2.8,
+    "v": 1.0,
+    "surface_mass": 0.0
+  },
+  "stages": [
+    {
+      "stage": "state_total",
+      "seconds": 0.11493965610861778,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125
+    },
+    {
+      "stage": "hamiltonian",
+      "seconds": 0.0052180662751197815,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125,
+      "shape": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "stage": "diagonalization",
+      "seconds": 0.10212605819106102,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125,
+      "n_eigenvalues": 1024
+    },
+    {
+      "stage": "correlations",
+      "seconds": 0.11711405217647552,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125,
+      "shape": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "stage": "entropy_unit",
+      "seconds": 0.11620559170842171,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125,
+      "shape": [
+        1,
+        1,
+        1
+      ],
+      "volume": 1,
+      "entropy": 0.16749649998111668
+    },
+    {
+      "stage": "entropy_line_half_x",
+      "seconds": 0.12173302844166756,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125,
+      "shape": [
+        4,
+        1,
+        1
+      ],
+      "volume": 4,
+      "entropy": 0.7171694503856003
+    },
+    {
+      "stage": "entropy_cube_half_edge",
+      "seconds": 0.1224469393491745,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125,
+      "shape": [
+        4,
+        4,
+        4
+      ],
+      "volume": 64,
+      "entropy": 4.236395749298962
+    },
+    {
+      "stage": "entropy_slab_xy_half_z",
+      "seconds": 0.13195763155817986,
+      "peak_rss_raw": 81236,
+      "peak_rss_mb": 79.33203125,
+      "shape": [
+        8,
+        8,
+        4
+      ],
+      "volume": 256,
+      "entropy": 13.692409970860965
+    }
+  ]
+}

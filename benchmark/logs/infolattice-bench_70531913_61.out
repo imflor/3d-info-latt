@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/cluster_users/x_imflor/3d-info-latt/benchmark/worker.py", line 6, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

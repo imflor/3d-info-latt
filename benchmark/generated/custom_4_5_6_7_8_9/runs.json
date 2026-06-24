@@ -1,0 +1,137 @@
+{
+  "stage": "custom_4_5_6_7_8_9",
+  "runs": [
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 4,
+      "periodic": false,
+      "run_name": "bench_nodal_line_L4_open",
+      "run_dir": "benchmark/runs/bench_nodal_line_L4_open",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L4_open/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L4_open/submit_array.slurm",
+      "n_jobs": 1000,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 4,
+      "periodic": true,
+      "run_name": "bench_nodal_line_L4_periodic",
+      "run_dir": "benchmark/runs/bench_nodal_line_L4_periodic",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L4_periodic/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L4_periodic/submit_array.slurm",
+      "n_jobs": 64,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 5,
+      "periodic": false,
+      "run_name": "bench_nodal_line_L5_open",
+      "run_dir": "benchmark/runs/bench_nodal_line_L5_open",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L5_open/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L5_open/submit_array.slurm",
+      "n_jobs": 3375,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 5,
+      "periodic": true,
+      "run_name": "bench_nodal_line_L5_periodic",
+      "run_dir": "benchmark/runs/bench_nodal_line_L5_periodic",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L5_periodic/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L5_periodic/submit_array.slurm",
+      "n_jobs": 125,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 6,
+      "periodic": false,
+      "run_name": "bench_nodal_line_L6_open",
+      "run_dir": "benchmark/runs/bench_nodal_line_L6_open",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L6_open/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L6_open/submit_array.slurm",
+      "n_jobs": 9261,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 6,
+      "periodic": true,
+      "run_name": "bench_nodal_line_L6_periodic",
+      "run_dir": "benchmark/runs/bench_nodal_line_L6_periodic",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L6_periodic/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L6_periodic/submit_array.slurm",
+      "n_jobs": 216,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 7,
+      "periodic": false,
+      "run_name": "bench_nodal_line_L7_open",
+      "run_dir": "benchmark/runs/bench_nodal_line_L7_open",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L7_open/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L7_open/submit_array.slurm",
+      "n_jobs": 21952,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 7,
+      "periodic": true,
+      "run_name": "bench_nodal_line_L7_periodic",
+      "run_dir": "benchmark/runs/bench_nodal_line_L7_periodic",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L7_periodic/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L7_periodic/submit_array.slurm",
+      "n_jobs": 343,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 8,
+      "periodic": false,
+      "run_name": "bench_nodal_line_L8_open",
+      "run_dir": "benchmark/runs/bench_nodal_line_L8_open",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L8_open/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L8_open/submit_array.slurm",
+      "n_jobs": 46656,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 8,
+      "periodic": true,
+      "run_name": "bench_nodal_line_L8_periodic",
+      "run_dir": "benchmark/runs/bench_nodal_line_L8_periodic",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L8_periodic/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L8_periodic/submit_array.slurm",
+      "n_jobs": 512,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 9,
+      "periodic": false,
+      "run_name": "bench_nodal_line_L9_open",
+      "run_dir": "benchmark/runs/bench_nodal_line_L9_open",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L9_open/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L9_open/submit_array.slurm",
+      "n_jobs": 91125,
+      "n_chunks": 128
+    },
+    {
+      "stage": "custom_4_5_6_7_8_9",
+      "length": 9,
+      "periodic": true,
+      "run_name": "bench_nodal_line_L9_periodic",
+      "run_dir": "benchmark/runs/bench_nodal_line_L9_periodic",
+      "manifest_path": "benchmark/runs/bench_nodal_line_L9_periodic/manifest.json",
+      "submit_script": "benchmark/runs/bench_nodal_line_L9_periodic/submit_array.slurm",
+      "n_jobs": 729,
+      "n_chunks": 128
+    }
+  ]
+}

@@ -1,0 +1,1229 @@
+{
+  "version": 1,
+  "run_name": "bench_nodal_line_L7_open",
+  "state": {
+    "name": "NodalLineGS",
+    "kwargs": {
+      "n_sites": [
+        7,
+        7,
+        7
+      ],
+      "periodic": false,
+      "m": 2.8,
+      "v": 1.0,
+      "surface_mass": 0.0
+    },
+    "periodic": false,
+    "state_path": "data/correlation.npy"
+  },
+  "lattice": {
+    "kwargs": {
+      "n_sites": [
+        7,
+        7,
+        7
+      ]
+    },
+    "batch_size": 25,
+    "parallel": "slurm"
+  },
+  "data": {
+    "jobs": "data/jobs.npy",
+    "assembled": "data/lattice.npz"
+  },
+  "chunking": {
+    "strategy": "greedy_memory_time",
+    "matrix_size": "subsystem_volume",
+    "memory_load": "subsystem_volume**2",
+    "time_load": "subsystem_volume**3"
+  },
+  "shuffle_seed": 0,
+  "n_jobs": 21952,
+  "n_chunks": 128,
+  "chunks": [
+    {
+      "chunk_id": 0,
+      "start": 0,
+      "stop": 167,
+      "n_jobs": 167,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 51829174,
+      "output": "data/chunks/chunk_00000.npz"
+    },
+    {
+      "chunk_id": 1,
+      "start": 167,
+      "stop": 339,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 40753320,
+      "output": "data/chunks/chunk_00001.npz"
+    },
+    {
+      "chunk_id": 2,
+      "start": 339,
+      "stop": 511,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 40753320,
+      "output": "data/chunks/chunk_00002.npz"
+    },
+    {
+      "chunk_id": 3,
+      "start": 511,
+      "stop": 681,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 40758590,
+      "output": "data/chunks/chunk_00003.npz"
+    },
+    {
+      "chunk_id": 4,
+      "start": 681,
+      "stop": 851,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 40758590,
+      "output": "data/chunks/chunk_00004.npz"
+    },
+    {
+      "chunk_id": 5,
+      "start": 851,
+      "stop": 1020,
+      "n_jobs": 169,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 40755794,
+      "output": "data/chunks/chunk_00005.npz"
+    },
+    {
+      "chunk_id": 6,
+      "start": 1020,
+      "stop": 1189,
+      "n_jobs": 169,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 40755650,
+      "output": "data/chunks/chunk_00006.npz"
+    },
+    {
+      "chunk_id": 7,
+      "start": 1189,
+      "stop": 1361,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664032,
+      "output": "data/chunks/chunk_00007.npz"
+    },
+    {
+      "chunk_id": 8,
+      "start": 1361,
+      "stop": 1533,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664032,
+      "output": "data/chunks/chunk_00008.npz"
+    },
+    {
+      "chunk_id": 9,
+      "start": 1533,
+      "stop": 1705,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664032,
+      "output": "data/chunks/chunk_00009.npz"
+    },
+    {
+      "chunk_id": 10,
+      "start": 1705,
+      "stop": 1877,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664032,
+      "output": "data/chunks/chunk_00010.npz"
+    },
+    {
+      "chunk_id": 11,
+      "start": 1877,
+      "stop": 2049,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664032,
+      "output": "data/chunks/chunk_00011.npz"
+    },
+    {
+      "chunk_id": 12,
+      "start": 2049,
+      "stop": 2221,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664032,
+      "output": "data/chunks/chunk_00012.npz"
+    },
+    {
+      "chunk_id": 13,
+      "start": 2221,
+      "stop": 2393,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664032,
+      "output": "data/chunks/chunk_00013.npz"
+    },
+    {
+      "chunk_id": 14,
+      "start": 2393,
+      "stop": 2563,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664042,
+      "output": "data/chunks/chunk_00014.npz"
+    },
+    {
+      "chunk_id": 15,
+      "start": 2563,
+      "stop": 2733,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664042,
+      "output": "data/chunks/chunk_00015.npz"
+    },
+    {
+      "chunk_id": 16,
+      "start": 2733,
+      "stop": 2903,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664042,
+      "output": "data/chunks/chunk_00016.npz"
+    },
+    {
+      "chunk_id": 17,
+      "start": 2903,
+      "stop": 3074,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664936,
+      "output": "data/chunks/chunk_00017.npz"
+    },
+    {
+      "chunk_id": 18,
+      "start": 3074,
+      "stop": 3245,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34664936,
+      "output": "data/chunks/chunk_00018.npz"
+    },
+    {
+      "chunk_id": 19,
+      "start": 3245,
+      "stop": 3417,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34198662,
+      "output": "data/chunks/chunk_00019.npz"
+    },
+    {
+      "chunk_id": 20,
+      "start": 3417,
+      "stop": 3589,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34198662,
+      "output": "data/chunks/chunk_00020.npz"
+    },
+    {
+      "chunk_id": 21,
+      "start": 3589,
+      "stop": 3761,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34198662,
+      "output": "data/chunks/chunk_00021.npz"
+    },
+    {
+      "chunk_id": 22,
+      "start": 3761,
+      "stop": 3933,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34198662,
+      "output": "data/chunks/chunk_00022.npz"
+    },
+    {
+      "chunk_id": 23,
+      "start": 3933,
+      "stop": 4105,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34198662,
+      "output": "data/chunks/chunk_00023.npz"
+    },
+    {
+      "chunk_id": 24,
+      "start": 4105,
+      "stop": 4277,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34198662,
+      "output": "data/chunks/chunk_00024.npz"
+    },
+    {
+      "chunk_id": 25,
+      "start": 4277,
+      "stop": 4449,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34184384,
+      "output": "data/chunks/chunk_00025.npz"
+    },
+    {
+      "chunk_id": 26,
+      "start": 4449,
+      "stop": 4621,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34184384,
+      "output": "data/chunks/chunk_00026.npz"
+    },
+    {
+      "chunk_id": 27,
+      "start": 4621,
+      "stop": 4793,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 34184384,
+      "output": "data/chunks/chunk_00027.npz"
+    },
+    {
+      "chunk_id": 28,
+      "start": 4793,
+      "stop": 4964,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195012,
+      "output": "data/chunks/chunk_00028.npz"
+    },
+    {
+      "chunk_id": 29,
+      "start": 4964,
+      "stop": 5135,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195012,
+      "output": "data/chunks/chunk_00029.npz"
+    },
+    {
+      "chunk_id": 30,
+      "start": 5135,
+      "stop": 5306,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195012,
+      "output": "data/chunks/chunk_00030.npz"
+    },
+    {
+      "chunk_id": 31,
+      "start": 5306,
+      "stop": 5477,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195012,
+      "output": "data/chunks/chunk_00031.npz"
+    },
+    {
+      "chunk_id": 32,
+      "start": 5477,
+      "stop": 5648,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195888,
+      "output": "data/chunks/chunk_00032.npz"
+    },
+    {
+      "chunk_id": 33,
+      "start": 5648,
+      "stop": 5819,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195888,
+      "output": "data/chunks/chunk_00033.npz"
+    },
+    {
+      "chunk_id": 34,
+      "start": 5819,
+      "stop": 5990,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195888,
+      "output": "data/chunks/chunk_00034.npz"
+    },
+    {
+      "chunk_id": 35,
+      "start": 5990,
+      "stop": 6161,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31195888,
+      "output": "data/chunks/chunk_00035.npz"
+    },
+    {
+      "chunk_id": 36,
+      "start": 6161,
+      "stop": 6335,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31349370,
+      "output": "data/chunks/chunk_00036.npz"
+    },
+    {
+      "chunk_id": 37,
+      "start": 6335,
+      "stop": 6509,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31349370,
+      "output": "data/chunks/chunk_00037.npz"
+    },
+    {
+      "chunk_id": 38,
+      "start": 6509,
+      "stop": 6683,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31349370,
+      "output": "data/chunks/chunk_00038.npz"
+    },
+    {
+      "chunk_id": 39,
+      "start": 6683,
+      "stop": 6857,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31349370,
+      "output": "data/chunks/chunk_00039.npz"
+    },
+    {
+      "chunk_id": 40,
+      "start": 6857,
+      "stop": 7031,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31349370,
+      "output": "data/chunks/chunk_00040.npz"
+    },
+    {
+      "chunk_id": 41,
+      "start": 7031,
+      "stop": 7205,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31349370,
+      "output": "data/chunks/chunk_00041.npz"
+    },
+    {
+      "chunk_id": 42,
+      "start": 7205,
+      "stop": 7377,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31278794,
+      "output": "data/chunks/chunk_00042.npz"
+    },
+    {
+      "chunk_id": 43,
+      "start": 7377,
+      "stop": 7549,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31278794,
+      "output": "data/chunks/chunk_00043.npz"
+    },
+    {
+      "chunk_id": 44,
+      "start": 7549,
+      "stop": 7721,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31278794,
+      "output": "data/chunks/chunk_00044.npz"
+    },
+    {
+      "chunk_id": 45,
+      "start": 7721,
+      "stop": 7893,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31253354,
+      "output": "data/chunks/chunk_00045.npz"
+    },
+    {
+      "chunk_id": 46,
+      "start": 7893,
+      "stop": 8065,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 31253354,
+      "output": "data/chunks/chunk_00046.npz"
+    },
+    {
+      "chunk_id": 47,
+      "start": 8065,
+      "stop": 8236,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30818716,
+      "output": "data/chunks/chunk_00047.npz"
+    },
+    {
+      "chunk_id": 48,
+      "start": 8236,
+      "stop": 8409,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30827172,
+      "output": "data/chunks/chunk_00048.npz"
+    },
+    {
+      "chunk_id": 49,
+      "start": 8409,
+      "stop": 8582,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30827172,
+      "output": "data/chunks/chunk_00049.npz"
+    },
+    {
+      "chunk_id": 50,
+      "start": 8582,
+      "stop": 8755,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30827172,
+      "output": "data/chunks/chunk_00050.npz"
+    },
+    {
+      "chunk_id": 51,
+      "start": 8755,
+      "stop": 8928,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30827172,
+      "output": "data/chunks/chunk_00051.npz"
+    },
+    {
+      "chunk_id": 52,
+      "start": 8928,
+      "stop": 9101,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30827160,
+      "output": "data/chunks/chunk_00052.npz"
+    },
+    {
+      "chunk_id": 53,
+      "start": 9101,
+      "stop": 9275,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30803546,
+      "output": "data/chunks/chunk_00053.npz"
+    },
+    {
+      "chunk_id": 54,
+      "start": 9275,
+      "stop": 9449,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30803546,
+      "output": "data/chunks/chunk_00054.npz"
+    },
+    {
+      "chunk_id": 55,
+      "start": 9449,
+      "stop": 9622,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30809250,
+      "output": "data/chunks/chunk_00055.npz"
+    },
+    {
+      "chunk_id": 56,
+      "start": 9622,
+      "stop": 9795,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30809250,
+      "output": "data/chunks/chunk_00056.npz"
+    },
+    {
+      "chunk_id": 57,
+      "start": 9795,
+      "stop": 9968,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808902,
+      "output": "data/chunks/chunk_00057.npz"
+    },
+    {
+      "chunk_id": 58,
+      "start": 9968,
+      "stop": 10141,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808902,
+      "output": "data/chunks/chunk_00058.npz"
+    },
+    {
+      "chunk_id": 59,
+      "start": 10141,
+      "stop": 10314,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808902,
+      "output": "data/chunks/chunk_00059.npz"
+    },
+    {
+      "chunk_id": 60,
+      "start": 10314,
+      "stop": 10486,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808896,
+      "output": "data/chunks/chunk_00060.npz"
+    },
+    {
+      "chunk_id": 61,
+      "start": 10486,
+      "stop": 10658,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808896,
+      "output": "data/chunks/chunk_00061.npz"
+    },
+    {
+      "chunk_id": 62,
+      "start": 10658,
+      "stop": 10830,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808896,
+      "output": "data/chunks/chunk_00062.npz"
+    },
+    {
+      "chunk_id": 63,
+      "start": 10830,
+      "stop": 11002,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808896,
+      "output": "data/chunks/chunk_00063.npz"
+    },
+    {
+      "chunk_id": 64,
+      "start": 11002,
+      "stop": 11174,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808896,
+      "output": "data/chunks/chunk_00064.npz"
+    },
+    {
+      "chunk_id": 65,
+      "start": 11174,
+      "stop": 11347,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30808206,
+      "output": "data/chunks/chunk_00065.npz"
+    },
+    {
+      "chunk_id": 66,
+      "start": 11347,
+      "stop": 11521,
+      "n_jobs": 174,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30767738,
+      "output": "data/chunks/chunk_00066.npz"
+    },
+    {
+      "chunk_id": 67,
+      "start": 11521,
+      "stop": 11691,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30764196,
+      "output": "data/chunks/chunk_00067.npz"
+    },
+    {
+      "chunk_id": 68,
+      "start": 11691,
+      "stop": 11861,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30764196,
+      "output": "data/chunks/chunk_00068.npz"
+    },
+    {
+      "chunk_id": 69,
+      "start": 11861,
+      "stop": 12034,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30764192,
+      "output": "data/chunks/chunk_00069.npz"
+    },
+    {
+      "chunk_id": 70,
+      "start": 12034,
+      "stop": 12204,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30757506,
+      "output": "data/chunks/chunk_00070.npz"
+    },
+    {
+      "chunk_id": 71,
+      "start": 12204,
+      "stop": 12375,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30754974,
+      "output": "data/chunks/chunk_00071.npz"
+    },
+    {
+      "chunk_id": 72,
+      "start": 12375,
+      "stop": 12547,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30393148,
+      "output": "data/chunks/chunk_00072.npz"
+    },
+    {
+      "chunk_id": 73,
+      "start": 12547,
+      "stop": 12718,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30390040,
+      "output": "data/chunks/chunk_00073.npz"
+    },
+    {
+      "chunk_id": 74,
+      "start": 12718,
+      "stop": 12889,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30390040,
+      "output": "data/chunks/chunk_00074.npz"
+    },
+    {
+      "chunk_id": 75,
+      "start": 12889,
+      "stop": 13059,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30390164,
+      "output": "data/chunks/chunk_00075.npz"
+    },
+    {
+      "chunk_id": 76,
+      "start": 13059,
+      "stop": 13231,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30390148,
+      "output": "data/chunks/chunk_00076.npz"
+    },
+    {
+      "chunk_id": 77,
+      "start": 13231,
+      "stop": 13402,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30390152,
+      "output": "data/chunks/chunk_00077.npz"
+    },
+    {
+      "chunk_id": 78,
+      "start": 13402,
+      "stop": 13573,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30390152,
+      "output": "data/chunks/chunk_00078.npz"
+    },
+    {
+      "chunk_id": 79,
+      "start": 13573,
+      "stop": 13744,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30390152,
+      "output": "data/chunks/chunk_00079.npz"
+    },
+    {
+      "chunk_id": 80,
+      "start": 13744,
+      "stop": 13915,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30389200,
+      "output": "data/chunks/chunk_00080.npz"
+    },
+    {
+      "chunk_id": 81,
+      "start": 13915,
+      "stop": 14086,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30389200,
+      "output": "data/chunks/chunk_00081.npz"
+    },
+    {
+      "chunk_id": 82,
+      "start": 14086,
+      "stop": 14257,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30389200,
+      "output": "data/chunks/chunk_00082.npz"
+    },
+    {
+      "chunk_id": 83,
+      "start": 14257,
+      "stop": 14428,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 30389200,
+      "output": "data/chunks/chunk_00083.npz"
+    },
+    {
+      "chunk_id": 84,
+      "start": 14428,
+      "stop": 14601,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29973234,
+      "output": "data/chunks/chunk_00084.npz"
+    },
+    {
+      "chunk_id": 85,
+      "start": 14601,
+      "stop": 14774,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29973234,
+      "output": "data/chunks/chunk_00085.npz"
+    },
+    {
+      "chunk_id": 86,
+      "start": 14774,
+      "stop": 14947,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29973234,
+      "output": "data/chunks/chunk_00086.npz"
+    },
+    {
+      "chunk_id": 87,
+      "start": 14947,
+      "stop": 15119,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29967492,
+      "output": "data/chunks/chunk_00087.npz"
+    },
+    {
+      "chunk_id": 88,
+      "start": 15119,
+      "stop": 15291,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29967492,
+      "output": "data/chunks/chunk_00088.npz"
+    },
+    {
+      "chunk_id": 89,
+      "start": 15291,
+      "stop": 15461,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29905408,
+      "output": "data/chunks/chunk_00089.npz"
+    },
+    {
+      "chunk_id": 90,
+      "start": 15461,
+      "stop": 15631,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29905408,
+      "output": "data/chunks/chunk_00090.npz"
+    },
+    {
+      "chunk_id": 91,
+      "start": 15631,
+      "stop": 15801,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29905408,
+      "output": "data/chunks/chunk_00091.npz"
+    },
+    {
+      "chunk_id": 92,
+      "start": 15801,
+      "stop": 15972,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29905200,
+      "output": "data/chunks/chunk_00092.npz"
+    },
+    {
+      "chunk_id": 93,
+      "start": 15972,
+      "stop": 16142,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29905654,
+      "output": "data/chunks/chunk_00093.npz"
+    },
+    {
+      "chunk_id": 94,
+      "start": 16142,
+      "stop": 16312,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29905654,
+      "output": "data/chunks/chunk_00094.npz"
+    },
+    {
+      "chunk_id": 95,
+      "start": 16312,
+      "stop": 16485,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29967994,
+      "output": "data/chunks/chunk_00095.npz"
+    },
+    {
+      "chunk_id": 96,
+      "start": 16485,
+      "stop": 16658,
+      "n_jobs": 173,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29967994,
+      "output": "data/chunks/chunk_00096.npz"
+    },
+    {
+      "chunk_id": 97,
+      "start": 16658,
+      "stop": 16830,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29970994,
+      "output": "data/chunks/chunk_00097.npz"
+    },
+    {
+      "chunk_id": 98,
+      "start": 16830,
+      "stop": 17001,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29970970,
+      "output": "data/chunks/chunk_00098.npz"
+    },
+    {
+      "chunk_id": 99,
+      "start": 17001,
+      "stop": 17172,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29970970,
+      "output": "data/chunks/chunk_00099.npz"
+    },
+    {
+      "chunk_id": 100,
+      "start": 17172,
+      "stop": 17343,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29859850,
+      "output": "data/chunks/chunk_00100.npz"
+    },
+    {
+      "chunk_id": 101,
+      "start": 17343,
+      "stop": 17514,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29859850,
+      "output": "data/chunks/chunk_00101.npz"
+    },
+    {
+      "chunk_id": 102,
+      "start": 17514,
+      "stop": 17685,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29859850,
+      "output": "data/chunks/chunk_00102.npz"
+    },
+    {
+      "chunk_id": 103,
+      "start": 17685,
+      "stop": 17856,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29859850,
+      "output": "data/chunks/chunk_00103.npz"
+    },
+    {
+      "chunk_id": 104,
+      "start": 17856,
+      "stop": 18027,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29859850,
+      "output": "data/chunks/chunk_00104.npz"
+    },
+    {
+      "chunk_id": 105,
+      "start": 18027,
+      "stop": 18198,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29859832,
+      "output": "data/chunks/chunk_00105.npz"
+    },
+    {
+      "chunk_id": 106,
+      "start": 18198,
+      "stop": 18368,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29847574,
+      "output": "data/chunks/chunk_00106.npz"
+    },
+    {
+      "chunk_id": 107,
+      "start": 18368,
+      "stop": 18540,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924680,
+      "output": "data/chunks/chunk_00107.npz"
+    },
+    {
+      "chunk_id": 108,
+      "start": 18540,
+      "stop": 18712,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924680,
+      "output": "data/chunks/chunk_00108.npz"
+    },
+    {
+      "chunk_id": 109,
+      "start": 18712,
+      "stop": 18882,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924942,
+      "output": "data/chunks/chunk_00109.npz"
+    },
+    {
+      "chunk_id": 110,
+      "start": 18882,
+      "stop": 19052,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924942,
+      "output": "data/chunks/chunk_00110.npz"
+    },
+    {
+      "chunk_id": 111,
+      "start": 19052,
+      "stop": 19223,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29922598,
+      "output": "data/chunks/chunk_00111.npz"
+    },
+    {
+      "chunk_id": 112,
+      "start": 19223,
+      "stop": 19394,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29922598,
+      "output": "data/chunks/chunk_00112.npz"
+    },
+    {
+      "chunk_id": 113,
+      "start": 19394,
+      "stop": 19564,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29913694,
+      "output": "data/chunks/chunk_00113.npz"
+    },
+    {
+      "chunk_id": 114,
+      "start": 19564,
+      "stop": 19734,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29913694,
+      "output": "data/chunks/chunk_00114.npz"
+    },
+    {
+      "chunk_id": 115,
+      "start": 19734,
+      "stop": 19904,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29913694,
+      "output": "data/chunks/chunk_00115.npz"
+    },
+    {
+      "chunk_id": 116,
+      "start": 19904,
+      "stop": 20074,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29913694,
+      "output": "data/chunks/chunk_00116.npz"
+    },
+    {
+      "chunk_id": 117,
+      "start": 20074,
+      "stop": 20244,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29913694,
+      "output": "data/chunks/chunk_00117.npz"
+    },
+    {
+      "chunk_id": 118,
+      "start": 20244,
+      "stop": 20414,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29913694,
+      "output": "data/chunks/chunk_00118.npz"
+    },
+    {
+      "chunk_id": 119,
+      "start": 20414,
+      "stop": 20584,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29913694,
+      "output": "data/chunks/chunk_00119.npz"
+    },
+    {
+      "chunk_id": 120,
+      "start": 20584,
+      "stop": 20755,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29960528,
+      "output": "data/chunks/chunk_00120.npz"
+    },
+    {
+      "chunk_id": 121,
+      "start": 20755,
+      "stop": 20927,
+      "n_jobs": 172,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29969992,
+      "output": "data/chunks/chunk_00121.npz"
+    },
+    {
+      "chunk_id": 122,
+      "start": 20927,
+      "stop": 21098,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924602,
+      "output": "data/chunks/chunk_00122.npz"
+    },
+    {
+      "chunk_id": 123,
+      "start": 21098,
+      "stop": 21269,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924602,
+      "output": "data/chunks/chunk_00123.npz"
+    },
+    {
+      "chunk_id": 124,
+      "start": 21269,
+      "stop": 21440,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924602,
+      "output": "data/chunks/chunk_00124.npz"
+    },
+    {
+      "chunk_id": 125,
+      "start": 21440,
+      "stop": 21611,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924602,
+      "output": "data/chunks/chunk_00125.npz"
+    },
+    {
+      "chunk_id": 126,
+      "start": 21611,
+      "stop": 21782,
+      "n_jobs": 171,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924566,
+      "output": "data/chunks/chunk_00126.npz"
+    },
+    {
+      "chunk_id": 127,
+      "start": 21782,
+      "stop": 21952,
+      "n_jobs": 170,
+      "estimated_memory_load": 296352,
+      "estimated_time_load": 29924108,
+      "output": "data/chunks/chunk_00127.npz"
+    }
+  ],
+  "benchmark": {
+    "stage": "custom_4_5_6_7_8_9",
+    "state_class": "NodalLineGS",
+    "periodic": false,
+    "length": 7,
+    "n_sites": [
+      7,
+      7,
+      7
+    ],
+    "model_parameters": {
+      "n_sites": [
+        7,
+        7,
+        7
+      ],
+      "periodic": false,
+      "m": 2.8,
+      "v": 1.0,
+      "surface_mass": 0.0
+    },
+    "state_slug": "nodal_line",
+    "state_profile": "data/state_profile.json",
+    "worker_module": "benchmark.worker",
+    "assembler_module": "benchmark.assemble",
+    "rough_targets": [
+      15,
+      20,
+      30
+    ]
+  }
+}

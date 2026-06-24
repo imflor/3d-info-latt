@@ -1,0 +1,15 @@
+chunk_id=82
+n_jobs=29
+subsystem_shapes=[[5, 5, 2], [5, 4, 2], [4, 2, 4], [5, 3, 2], [4, 3, 2], [5, 4, 1], [5, 2, 2], [2, 2, 4], [4, 4, 1], [4, 1, 3], [4, 3, 1], [4, 1, 3], [2, 1, 5], [1, 3, 3], [3, 1, 3], [4, 1, 2], [2, 1, 4], [2, 1, 3], [2, 1, 3], [3, 2, 1], [1, 5, 1], [2, 2, 1], [2, 2, 1], [2, 1, 2], [3, 1, 1], [3, 1, 1], [2, 1, 1], [2, 1, 1], [1, 1, 1]]
+subsystem_volumes=[50, 40, 32, 30, 24, 20, 20, 16, 16, 12, 12, 12, 10, 9, 9, 8, 8, 6, 6, 6, 5, 4, 4, 4, 3, 3, 2, 2, 1]
+Wrote benchmark chunk 82 to benchmark/runs/bench_nodal_line_L5_open/data/chunks/chunk_00082.npz
+manifest_load_seconds=0.000536
+load_jobs_seconds=0.000685
+build_state_seconds=0.001246
+build_lattice_seconds=0.000165
+entropy_total_seconds=0.006511
+write_output_seconds=0.006243
+worker_seconds=0.015329
+peak_rss_raw=31244
+peak_rss_mb=30.512
+peak_rss_gb=0.030

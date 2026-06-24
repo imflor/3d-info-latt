@@ -1,0 +1,15 @@
+chunk_id=112
+n_jobs=9
+subsystem_shapes=[[7, 7, 5], [8, 3, 9], [2, 9, 8], [7, 9, 2], [9, 1, 7], [4, 2, 7], [7, 2, 2], [2, 9, 1], [1, 9, 1]]
+subsystem_volumes=[245, 216, 144, 126, 63, 56, 28, 18, 9]
+Wrote benchmark chunk 112 to benchmark/runs/bench_nodal_line_L9_periodic/data/chunks/chunk_00112.npz
+manifest_load_seconds=0.000510
+load_jobs_seconds=0.000474
+build_state_seconds=0.001990
+build_lattice_seconds=0.003275
+entropy_total_seconds=0.053108
+write_output_seconds=0.007964
+worker_seconds=0.065203
+peak_rss_raw=60536
+peak_rss_mb=59.117
+peak_rss_gb=0.058

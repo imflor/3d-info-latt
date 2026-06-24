@@ -1,0 +1,15 @@
+chunk_id=79
+n_jobs=8
+subsystem_shapes=[[9, 8, 4], [9, 7, 3], [4, 8, 4], [6, 5, 3], [9, 7, 1], [1, 7, 8], [3, 4, 3], [1, 1, 5]]
+subsystem_volumes=[288, 189, 128, 90, 63, 56, 36, 5]
+Wrote benchmark chunk 79 to benchmark/runs/bench_nodal_line_L9_periodic/data/chunks/chunk_00079.npz
+manifest_load_seconds=0.001481
+load_jobs_seconds=0.001595
+build_state_seconds=0.007730
+build_lattice_seconds=0.006520
+entropy_total_seconds=0.091891
+write_output_seconds=0.005679
+worker_seconds=0.116230
+peak_rss_raw=60912
+peak_rss_mb=59.484
+peak_rss_gb=0.058

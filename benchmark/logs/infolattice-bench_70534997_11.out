@@ -1,0 +1,15 @@
+chunk_id=11
+n_jobs=1
+subsystem_shapes=[[2, 3, 4]]
+subsystem_volumes=[24]
+Wrote benchmark chunk 11 to benchmark/runs/bench_nodal_line_L4_periodic/data/chunks/chunk_00011.npz
+manifest_load_seconds=0.000386
+load_jobs_seconds=0.000354
+build_state_seconds=0.000662
+build_lattice_seconds=0.000084
+entropy_total_seconds=0.000440
+write_output_seconds=0.005212
+worker_seconds=0.006548
+peak_rss_raw=29692
+peak_rss_mb=28.996
+peak_rss_gb=0.028

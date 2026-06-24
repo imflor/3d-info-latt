@@ -1,0 +1,15 @@
+chunk_id=5
+n_jobs=1
+subsystem_shapes=[[5, 5, 6]]
+subsystem_volumes=[150]
+Wrote benchmark chunk 5 to benchmark/runs/bench_nodal_line_L6_periodic/data/chunks/chunk_00005.npz
+manifest_load_seconds=0.001817
+load_jobs_seconds=0.001593
+build_state_seconds=0.004723
+build_lattice_seconds=0.000604
+entropy_total_seconds=0.004991
+write_output_seconds=0.015474
+worker_seconds=0.022072
+peak_rss_raw=35160
+peak_rss_mb=34.336
+peak_rss_gb=0.034

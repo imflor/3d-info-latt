@@ -121,7 +121,20 @@ def write_submit_script(submit_path, manifest_path, n_chunks, *, mem="4G", worke
 def write_stage_script(script_path, lines):
     script_path = Path(script_path)
     script_path.parent.mkdir(parents=True, exist_ok=True)
-    script_path.write_text("#!/bin/bash\nset -euo pipefail\n\n" + "\n".join(lines) + "\n")
+    prelude = [
+        "#!/bin/bash",
+        "set -euo pipefail",
+        "",
+        "REPO_ROOT=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")/../../..\" && pwd)\"",
+        "cd \"$REPO_ROOT\"",
+        "CONDA_BASE=\"${CONDA_BASE:-$HOME/miniconda3}\"",
+        "if [ -f \"$CONDA_BASE/etc/profile.d/conda.sh\" ]; then",
+        "  source \"$CONDA_BASE/etc/profile.d/conda.sh\"",
+        "  conda activate info-latt",
+        "fi",
+        "",
+    ]
+    script_path.write_text("\n".join(prelude + list(lines)) + "\n")
 
 
 def flatten_profile(profile):

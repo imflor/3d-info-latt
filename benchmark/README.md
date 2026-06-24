@@ -151,6 +151,12 @@ Each run gets its own submit script:
 benchmark/runs/<run_name>/submit_array.slurm
 ```
 
+The benchmark submit script explicitly activates the `info-latt` environment when `conda.sh` is available under `$HOME/miniconda3`, and otherwise falls back to the interpreter at:
+
+```text
+$HOME/miniconda3/envs/info-latt/bin/python
+```
+
 You can submit them individually:
 
 ```bash

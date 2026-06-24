@@ -32,7 +32,20 @@ class InformationLattice:
         self.compute_von_neumann_information(state, batch_size=self.batch_size)
         self.compute_local_information()
 
-    def entropy_jobs(self):
+    @staticmethod
+    def _state_is_periodic(state=None, state_periodic=None):
+        if state_periodic is not None:
+            return bool(state_periodic)
+        return bool(getattr(state, "periodic", False))
+
+    def entropy_jobs(self, periodic=False):
+        if periodic:
+            return [
+                (lx, ly, lz, 0, 0, 0)
+                for lx in range(self.Nx)
+                for ly in range(self.Ny)
+                for lz in range(self.Nz)
+            ]
         return [
             (lx, ly, lz, nx, ny, nz)
             for lx in range(self.Nx)
@@ -43,8 +56,8 @@ class InformationLattice:
             for nz in range(self.Nz - lz)
         ]
 
-    def entropy_job_array(self):
-        jobs = self.entropy_jobs()
+    def entropy_job_array(self, periodic=False):
+        jobs = self.entropy_jobs(periodic=periodic)
         if not jobs:
             return np.empty((0, 6), dtype=int)
         return np.asarray(jobs, dtype=int)
@@ -108,6 +121,27 @@ class InformationLattice:
             return self.subsystems_lattice[lx, ly, lz, nx, ny, nz, :n_sites]
         return self._get_subsystem_sites((nx, ny, nz), (lx, ly, lz))
 
+    def _entropy_result_index(self, lx, ly, lz, nx, ny, nz, periodic=False):
+        if periodic:
+            return (
+                int(lx),
+                int(ly),
+                int(lz),
+                slice(0, self.Nx - int(lx)),
+                slice(0, self.Ny - int(ly)),
+                slice(0, self.Nz - int(lz)),
+            )
+        return tuple(map(int, (lx, ly, lz, nx, ny, nz)))
+
+    def _apply_entropy_value(self, job, value, periodic=False):
+        self.i_vn[self._entropy_result_index(*job, periodic=periodic)] = float(value)
+
+    def _entropy_filled(self, filled, job, periodic=False):
+        return np.any(filled[self._entropy_result_index(*job, periodic=periodic)])
+
+    def _mark_entropy_filled(self, filled, job, periodic=False):
+        filled[self._entropy_result_index(*job, periodic=periodic)] = True
+
     def entropy_values_for_jobs(self, state, jobs):
         values = np.empty(len(jobs), dtype=float)
         for idx, (lx, ly, lz, nx, ny, nz) in enumerate(jobs):
@@ -119,7 +153,8 @@ class InformationLattice:
     def compute_von_neumann_information(self, state, batch_size=None, jobs=None):
         batch_size = self.batch_size if batch_size is None else int(batch_size)
         jobs_given = jobs is not None
-        jobs = self.entropy_jobs() if jobs is None else [tuple(map(int, job)) for job in jobs]
+        periodic = self._state_is_periodic(state=state)
+        jobs = self.entropy_jobs(periodic=periodic) if jobs is None else [tuple(map(int, job)) for job in jobs]
 
         if not jobs_given:
             self._reset_i_vn()
@@ -145,17 +180,17 @@ class InformationLattice:
             batch_size=batch_size,
             loader=self.loader,
         ):
-            lx, ly, lz, nx, ny, nz = job
-            self.i_vn[lx, ly, lz, nx, ny, nz] = val
+            self._apply_entropy_value(job, val, periodic=periodic)
 
-    def apply_entropy_results(self, jobs, values):
+    def apply_entropy_results(self, jobs, values, periodic=False):
         jobs = np.asarray(jobs, dtype=int)
         values = np.asarray(values, dtype=float)
         if jobs.ndim != 2 or jobs.shape[1] != 6:
             raise ValueError("jobs must have shape (n_jobs, 6)")
         if values.shape[0] != jobs.shape[0]:
             raise ValueError("values must have the same length as jobs")
-        self.i_vn[jobs[:, 0], jobs[:, 1], jobs[:, 2], jobs[:, 3], jobs[:, 4], jobs[:, 5]] = values
+        for job, value in zip(jobs, values):
+            self._apply_entropy_value(job, value, periodic=periodic)
 
     def write_slurm_manifest(
         self,
@@ -165,6 +200,7 @@ class InformationLattice:
         state_name,
         state_kwargs=None,
         state_path=None,
+        state_periodic=None,
         n_chunks=1,
         shuffle_seed=0,
         output_name="lattice.npz",
@@ -178,7 +214,11 @@ class InformationLattice:
         data_dir.mkdir(parents=True, exist_ok=True)
         chunk_dir.mkdir(parents=True, exist_ok=True)
 
-        jobs = self.entropy_job_array()
+        if state_periodic is None:
+            state_periodic = bool({} if state_kwargs is None else state_kwargs.get("periodic", False))
+        periodic = bool(state_periodic)
+
+        jobs = self.entropy_job_array(periodic=periodic)
         if shuffle_seed is not None:
             rng = np.random.default_rng(int(shuffle_seed))
             jobs = jobs[rng.permutation(len(jobs))]
@@ -220,6 +260,7 @@ class InformationLattice:
             "state": {
                 "name": state_name,
                 "kwargs": {} if state_kwargs is None else state_kwargs,
+                "periodic": periodic,
             },
             "lattice": {
                 "kwargs": {
@@ -260,6 +301,12 @@ class InformationLattice:
         self._reset_i_vn()
         self._reset_i_local()
 
+        periodic = self._state_is_periodic(
+            state_periodic=manifest["state"].get(
+                "periodic",
+                manifest["state"].get("kwargs", {}).get("periodic", False),
+            )
+        )
         expected = self._expected_entropy_mask()
         filled = np.zeros_like(expected)
 
@@ -270,10 +317,12 @@ class InformationLattice:
             with np.load(chunk_path) as data:
                 jobs = np.asarray(data["jobs"], dtype=int)
                 values = np.asarray(data["values"], dtype=float)
-            if np.any(filled[jobs[:, 0], jobs[:, 1], jobs[:, 2], jobs[:, 3], jobs[:, 4], jobs[:, 5]]):
-                raise RuntimeError(f"Duplicate Slurm chunk results detected in {chunk_path}")
-            self.apply_entropy_results(jobs, values)
-            filled[jobs[:, 0], jobs[:, 1], jobs[:, 2], jobs[:, 3], jobs[:, 4], jobs[:, 5]] = True
+            for job, value in zip(jobs, values):
+                job = tuple(map(int, job))
+                if self._entropy_filled(filled, job, periodic=periodic):
+                    raise RuntimeError(f"Duplicate Slurm chunk results detected in {chunk_path}")
+                self._apply_entropy_value(job, value, periodic=periodic)
+                self._mark_entropy_filled(filled, job, periodic=periodic)
 
         if not np.array_equal(filled, expected):
             raise RuntimeError("Missing or incomplete Slurm chunk results.")

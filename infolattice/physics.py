@@ -72,6 +72,7 @@ class TightBindingGS:
         self.n_sites = np.array(n_sites, dtype=int)
         self.nx, self.ny, self.nz = map(int, self.n_sites)
         self.n = int(self.n_sites.prod())
+        self.periodic = False
         self.t = t
         if correlation_path is None:
             self.h = self.hamiltonian()

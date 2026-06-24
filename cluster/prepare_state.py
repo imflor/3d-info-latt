@@ -18,7 +18,7 @@ STATE_SPECS = {
 }
 
 
-def resolve_n_chunks(lat, n_chunks, chunk_size):
+def resolve_n_chunks(lat, n_chunks, chunk_size, periodic=False):
     if n_chunks is not None and chunk_size is not None:
         raise ValueError("Pass either --n-chunks or --chunk-size, not both.")
     if n_chunks is not None:
@@ -30,7 +30,7 @@ def resolve_n_chunks(lat, n_chunks, chunk_size):
     chunk_size = DEFAULT_CHUNK_SIZE if chunk_size is None else int(chunk_size)
     if chunk_size <= 0:
         raise ValueError("--chunk-size must be positive.")
-    n_jobs = len(lat.entropy_jobs())
+    n_jobs = len(lat.entropy_jobs(periodic=periodic))
     return max(1, math.ceil(n_jobs / chunk_size))
 
 
@@ -108,15 +108,17 @@ def main(default_state_class="TightBindingGS", allow_state_class=True):
     if not hasattr(state, "save_correlation_matrix"):
         raise TypeError(f"State class '{state_class}' does not support saved correlation matrices.")
     state.save_correlation_matrix(correlation_path)
+    state_periodic = bool(getattr(state, "periodic", False))
 
     lat = il.InformationLattice(n_sites, parallel="slurm", loader=False)
-    n_chunks = resolve_n_chunks(lat, args.n_chunks, args.chunk_size)
+    n_chunks = resolve_n_chunks(lat, args.n_chunks, args.chunk_size, periodic=state_periodic)
     manifest = lat.write_slurm_manifest(
         manifest_path,
         run_name=run_name,
         state_name=state_class,
         state_kwargs=state_kwargs,
         state_path=correlation_relpath,
+        state_periodic=state_periodic,
         n_chunks=n_chunks,
         shuffle_seed=args.shuffle_seed,
         output_name="lattice.npz",
@@ -131,6 +133,7 @@ def main(default_state_class="TightBindingGS", allow_state_class=True):
     print(f"n_jobs={manifest['n_jobs']}")
     print(f"n_chunks={manifest['n_chunks']}")
     print(f"shuffle_seed={manifest['shuffle_seed']}")
+    print(f"state_periodic={state_periodic}")
     print(f"worker_mem={args.mem}")
     print("You can now submit directly with: sbatch cluster/submit_array.slurm")
 

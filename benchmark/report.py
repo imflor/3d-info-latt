@@ -7,6 +7,17 @@ import numpy as np
 from .common import TARGET_SIZES, dense_context_gb, flatten_profile, load_json, orbitals_per_site, write_json
 
 
+CHUNK_TIME_FIELDS = (
+    "manifest_load_seconds",
+    "load_jobs_seconds",
+    "build_state_seconds",
+    "build_lattice_seconds",
+    "entropy_total_seconds",
+    "write_output_seconds",
+    "worker_seconds",
+)
+
+
 def iter_manifests(run_root):
     for manifest_path in sorted(Path(run_root).glob("*/manifest.json")):
         manifest = load_json(manifest_path)
@@ -43,8 +54,7 @@ def load_run_record(manifest_path, manifest, benchmark):
         record.update(load_json(assemble_path))
 
     chunk_peak = []
-    chunk_worker = []
-    chunk_entropy = []
+    chunk_times = {field: [] for field in CHUNK_TIME_FIELDS}
     for chunk in manifest["chunks"]:
         chunk_path = run_dir / chunk["output"]
         if not chunk_path.exists():
@@ -52,18 +62,17 @@ def load_run_record(manifest_path, manifest, benchmark):
         data = np.load(chunk_path)
         if "peak_rss_mb" in data:
             chunk_peak.append(float(data["peak_rss_mb"]))
-        if "worker_seconds" in data:
-            chunk_worker.append(float(data["worker_seconds"]))
-        if "entropy_total_seconds" in data:
-            chunk_entropy.append(float(data["entropy_total_seconds"]))
+        for field in CHUNK_TIME_FIELDS:
+            if field in data and np.ndim(data[field]) == 0:
+                chunk_times[field].append(float(data[field]))
         data.close()
 
-    if chunk_worker:
-        record.setdefault("sum_worker_seconds", float(sum(chunk_worker)))
-        record.setdefault("max_worker_seconds", float(max(chunk_worker)))
-        record.setdefault("mean_worker_seconds", float(np.mean(chunk_worker)))
-    if chunk_entropy:
-        record.setdefault("sum_entropy_total_seconds", float(sum(chunk_entropy)))
+    for field, values in chunk_times.items():
+        if values:
+            record.setdefault(f"sum_{field}", float(sum(values)))
+    if chunk_times["worker_seconds"]:
+        record.setdefault("max_worker_seconds", float(max(chunk_times["worker_seconds"])))
+        record.setdefault("mean_worker_seconds", float(np.mean(chunk_times["worker_seconds"])))
     if chunk_peak:
         record.setdefault("max_worker_peak_rss_mb", float(max(chunk_peak)))
 
@@ -133,7 +142,7 @@ def write_csv(path, rows):
         return
     fieldnames = sorted({key for row in rows for key in row})
     with path.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

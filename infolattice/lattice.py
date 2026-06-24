@@ -38,14 +38,17 @@ class InformationLattice:
             return bool(state_periodic)
         return bool(getattr(state, "periodic", False))
 
+    def _shape_jobs(self):
+        return [
+            (lx, ly, lz, 0, 0, 0)
+            for lx in range(self.Nx)
+            for ly in range(self.Ny)
+            for lz in range(self.Nz)
+        ]
+
     def entropy_jobs(self, periodic=False):
         if periodic:
-            return [
-                (lx, ly, lz, 0, 0, 0)
-                for lx in range(self.Nx)
-                for ly in range(self.Ny)
-                for lz in range(self.Nz)
-            ]
+            return self._shape_jobs()
         return [
             (lx, ly, lz, nx, ny, nz)
             for lx in range(self.Nx)
@@ -154,7 +157,6 @@ class InformationLattice:
         batch_size = self.batch_size if batch_size is None else int(batch_size)
         jobs_given = jobs is not None
         periodic = self._state_is_periodic(state=state)
-        jobs = self.entropy_jobs(periodic=periodic) if jobs is None else [tuple(map(int, job)) for job in jobs]
 
         if not jobs_given:
             self._reset_i_vn()
@@ -173,6 +175,20 @@ class InformationLattice:
             sites = self._subsystem_sites(lx, ly, lz, nx, ny, nz)
             return n_sites - state.entanglement_entropy(sites)
 
+        if periodic and not jobs_given:
+            jobs = self._shape_jobs()
+            for job, val in map_jobs(
+                jobs,
+                i_vn_function,
+                parallel=parallel_mode,
+                batch_size=batch_size,
+                loader=self.loader,
+            ):
+                lx, ly, lz, _, _, _ = job
+                self.i_vn[lx, ly, lz, :self.Nx - lx, :self.Ny - ly, :self.Nz - lz] = val
+            return
+
+        jobs = self.entropy_jobs(periodic=periodic) if jobs is None else [tuple(map(int, job)) for job in jobs]
         for job, val in map_jobs(
             jobs,
             i_vn_function,

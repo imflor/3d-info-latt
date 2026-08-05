@@ -15,6 +15,9 @@ STATE_SPECS = {
     "NodalLineGS": {
         "slug": "nodal_line",
     },
+    "PiFluxGS": {
+        "slug": "pi_flux",
+    },
 }
 
 
@@ -45,6 +48,10 @@ def build_state_kwargs(args, state_class, n_sites):
     if state_class == "TightBindingGS":
         state_kwargs["t"] = args.t
         return state_kwargs
+    if state_class == "PiFluxGS":
+        state_kwargs["t"] = args.t
+        state_kwargs["periodic"] = args.periodic
+        return state_kwargs
     if state_class == "NodalLineGS":
         state_kwargs["periodic"] = args.periodic
         state_kwargs["m"] = args.m
@@ -70,8 +77,8 @@ def main(default_state_class="TightBindingGS", allow_state_class=True):
     parser.add_argument("--chunk-size", type=int, default=None, help=argparse.SUPPRESS)
     parser.add_argument("--shuffle-seed", type=int, default=0, help="Seed used to shuffle jobs before chunking.")
     parser.add_argument("--mem", default="4G", help="Memory requested per Slurm worker.")
-    parser.add_argument("--t", type=float, default=1.0, help="Nearest-neighbor hopping for TightBindingGS.")
-    parser.add_argument("--periodic", action="store_true", help="Use periodic boundaries for NodalLineGS.")
+    parser.add_argument("--t", type=float, default=1.0, help="Nearest-neighbor hopping for TightBindingGS or PiFluxGS.")
+    parser.add_argument("--periodic", action="store_true", help="Use periodic boundaries for PiFluxGS or NodalLineGS.")
     parser.add_argument("--m", type=float, default=2.8, help="Mass parameter for NodalLineGS.")
     parser.add_argument("--v", type=float, default=1.0, help="Orbital-mixing parameter for NodalLineGS.")
     parser.add_argument("--surface-mass", type=float, default=0.0, help="Boundary mixing mass for NodalLineGS.")
@@ -110,7 +117,7 @@ def main(default_state_class="TightBindingGS", allow_state_class=True):
     state.save_correlation_matrix(correlation_path)
     state_periodic = bool(getattr(state, "periodic", False))
 
-    lat = il.InformationLattice(n_sites, parallel="slurm", loader=False)
+    lat = il.InformationLattice(n_sites, parallel="slurm", loader=False, precompute_subsystems=False)
     n_chunks = resolve_n_chunks(lat, args.n_chunks, args.chunk_size, periodic=state_periodic)
     manifest = lat.write_slurm_manifest(
         manifest_path,

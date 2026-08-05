@@ -12,7 +12,7 @@ class InformationLattice:
     Includes local and Slurm-oriented computation helpers.
     """
 
-    def __init__(self, n_sites, parallel="joblib", loader=True, precompute_subsystems=True):
+    def __init__(self, n_sites, parallel="joblib", loader=True, precompute_subsystems=False):
         self.n_sites = np.array(n_sites, dtype=int)
         self.Nx, self.Ny, self.Nz = map(int, self.n_sites)
         self.n = int(self.n_sites.prod())
@@ -314,6 +314,13 @@ class InformationLattice:
         if not np.array_equal(lattice_n_sites, self.n_sites):
             raise ValueError("Manifest n_sites do not match this lattice.")
 
+        assembled_relpath = manifest.get("data", {}).get("assembled")
+        if assembled_relpath is not None:
+            assembled_path = manifest_path.parent / assembled_relpath
+            if assembled_path.exists():
+                self.load_assembled_results(assembled_path)
+                return manifest
+
         self._reset_i_vn()
         self._reset_i_local()
 
@@ -345,6 +352,23 @@ class InformationLattice:
 
         self.compute_local_information()
         return manifest
+
+    def load_assembled_results(self, assembled_path):
+        assembled_path = Path(assembled_path)
+        with np.load(assembled_path) as data:
+            n_sites = np.asarray(data["n_sites"], dtype=int)
+            if not np.array_equal(n_sites, self.n_sites):
+                raise ValueError("Assembled lattice n_sites do not match this lattice.")
+            i_vn = np.asarray(data["i_vn"], dtype=float)
+            i_local = np.asarray(data["i_local"], dtype=float)
+
+        if i_vn.shape != self.i_vn.shape:
+            raise ValueError("Assembled i_vn shape does not match this lattice.")
+        if i_local.shape != self.i_local.shape:
+            raise ValueError("Assembled i_local shape does not match this lattice.")
+
+        self.i_vn[...] = i_vn
+        self.i_local[...] = i_local
 
     def compute_local_information(self):
         self._reset_i_local()

@@ -222,3 +222,50 @@ class NodalLineGS(TightBindingGS):
 
     def correlation_matrix_shape(self):
         return 2 * self.n, 2 * self.n
+
+
+class PiFluxGS(TightBindingGS):
+
+    def __init__(self, n_sites, t=1.0, periodic=False, correlation_path=None):
+        self.tol_log = 1e-16
+        self.n_sites = np.array(n_sites, dtype=int)
+        self.nx, self.ny, self.nz = map(int, self.n_sites)
+        self.n = int(self.n_sites.prod())
+        self.t = float(t)
+        self.periodic = bool(periodic)
+        if correlation_path is None:
+            self.h = self.hamiltonian()
+            self.e, self.v = self.diagonalize_hamiltonian()
+            self.chi = self.correlations()
+        else:
+            self.h = None
+            self.e = None
+            self.v = None
+            self.chi = self._load_correlation_matrix(correlation_path)
+
+    def hamiltonian(self, periodic=None, t=None):
+        periodic = self.periodic if periodic is None else bool(periodic)
+        t = self.t if t is None else float(t)
+
+        H = np.zeros((self.nx, self.ny, self.nz, self.nx, self.ny, self.nz), dtype=float)
+        for i in range(self.nx):
+            for j in range(self.ny):
+                for k in range(self.nz):
+                    ip = i + 1
+                    if ip < self.nx or periodic:
+                        ip %= self.nx
+                        H[i, j, k, ip, j, k] = H[ip, j, k, i, j, k] = -t
+
+                    jp = j + 1
+                    if jp < self.ny or periodic:
+                        jp %= self.ny
+                        ty = t * ((-1.0) ** i)
+                        H[i, j, k, i, jp, k] = H[i, jp, k, i, j, k] = -ty
+
+                    kp = k + 1
+                    if kp < self.nz or periodic:
+                        kp %= self.nz
+                        tz = t * ((-1.0) ** (i + j))
+                        H[i, j, k, i, j, kp] = H[i, j, kp, i, j, k] = -tz
+
+        return H.reshape(self.n, self.n)

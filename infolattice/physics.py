@@ -67,13 +67,13 @@ class State:
 
 class TightBindingGS:
 
-    def __init__(self, n_sites, t=1, correlation_path=None):
+    def __init__(self, n_sites, t=1, periodic=False, correlation_path=None):
         self.tol_log = 1e-16
         self.n_sites = np.array(n_sites, dtype=int)
         self.nx, self.ny, self.nz = map(int, self.n_sites)
         self.n = int(self.n_sites.prod())
-        self.periodic = False
-        self.t = t
+        self.periodic = bool(periodic)
+        self.t = float(t)
         if correlation_path is None:
             self.h = self.hamiltonian()
             self.e, self.v = self.diagonalize_hamiltonian()
@@ -92,17 +92,27 @@ class TightBindingGS:
         Sp = entropy_stable(1 - s, self.tol_log)
         return S.sum() + Sp.sum()
 
-    def hamiltonian(self):
+    def hamiltonian(self, periodic=None, t=None):
+        periodic = self.periodic if periodic is None else bool(periodic)
+        t = self.t if t is None else float(t)
         H = np.zeros((self.nx, self.ny, self.nz, self.nx, self.ny, self.nz), dtype=float)
         for i in range(self.nx):
             for j in range(self.ny):
                 for k in range(self.nz):
-                    if i + 1 < self.nx:
-                        H[i, j, k, i + 1, j, k] = H[i + 1, j, k, i, j, k] = -self.t
-                    if j + 1 < self.ny:
-                        H[i, j, k, i, j + 1, k] = H[i, j + 1, k, i, j, k] = -self.t
-                    if k + 1 < self.nz:
-                        H[i, j, k, i, j, k + 1] = H[i, j, k + 1, i, j, k] = -self.t
+                    ip = i + 1
+                    if ip < self.nx or periodic:
+                        ip %= self.nx
+                        H[i, j, k, ip, j, k] = H[ip, j, k, i, j, k] = -t
+
+                    jp = j + 1
+                    if jp < self.ny or periodic:
+                        jp %= self.ny
+                        H[i, j, k, i, jp, k] = H[i, jp, k, i, j, k] = -t
+
+                    kp = k + 1
+                    if kp < self.nz or periodic:
+                        kp %= self.nz
+                        H[i, j, k, i, j, kp] = H[i, j, kp, i, j, k] = -t
         return H.reshape(self.n, self.n)
 
     def diagonalize_hamiltonian(self):

@@ -3,10 +3,14 @@ import infolattice as il
 import matplotlib.pyplot as plt
 
 run_dir = Path("/Users/matthiasflor/Documents/1. PhD/3. Information lattice/3d-info-latt/cluster/runs/nodal_line_15x15x15")
+run_dir = Path("/Users/matthiasflor/Documents/1. PhD/3. Information lattice/3d-info-latt/benchmark/runs/bench_nodal_line_L18_periodic")
+run_dir = Path("/Users/matthiasflor/Documents/1. PhD/3. Information lattice/3d-info-latt/cluster/runs/nodal_line_17x17x17")
+run_dir = Path("/Users/matthiasflor/Documents/1. PhD/3. Information lattice/3d-info-latt/cluster/runs/pi_flux_17x17x17")
+
 manifest = run_dir / "manifest.json"
 
-n_sites = (15, 15, 15)
-lat = il.InformationLattice(n_sites)
+n_sites = (17, 17, 17)
+lat = il.InformationLattice(n_sites, precompute_subsystems=False)
 lat.load_slurm_results(manifest)
 
 
@@ -27,15 +31,55 @@ plt.show()
 
 ## Plot the local information spread
 
-reference_point = (7, 7, 7)
+reference_point = (8, 8, 8)
 local_information_spread = lat.spread_around_point(*reference_point)
 il.save_rotating_3d_array(
     local_information_spread,
-    save_path="figures/i_centered_nodal_15.gif",
-    vmax=.0005,
-    cutoff=0,
-    power=.9,
-    max_alpha=1,
+    save_path="figures/i_fermisurface_17.gif",
+    vmax=.0008,
+    cutoff=0.3,
+    power=1.1,
+    max_alpha=.9,
+    marker_scale=100,
+    marker="o",
+    elev=30,
+    azim_start=170,
+    azim_stop=530,
+    frames=120,
+    fps=20,
+)
+
+##
+
+reference_point = (8, 8, 8)
+local_information_spread = lat.spread_around_point(*reference_point)
+il.save_rotating_3d_array(
+    local_information_spread,
+    save_path="figures/i_nodal_17.gif",
+    vmax=.0002,
+    cutoff=0.1,
+    power=.8,
+    max_alpha=.9,
+    marker_scale=100,
+    marker="o",
+    elev=30,
+    azim_start=170,
+    azim_stop=530,
+    frames=120,
+    fps=20,
+)
+
+##
+
+reference_point = (8, 8, 8)
+local_information_spread = lat.spread_around_point(*reference_point)
+il.save_rotating_3d_array(
+    local_information_spread,
+    save_path="figures/i_dirac_17.gif",
+    vmax=.0001,
+    cutoff=0.1,
+    power=.7,
+    max_alpha=.9,
     marker_scale=100,
     marker="o",
     elev=30,

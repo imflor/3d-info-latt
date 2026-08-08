@@ -1,0 +1,36 @@
+text.usetex : True
+font.family : serif
+text.latex.preamble : \usepackage{amsmath}\usepackage{amssymb}
+axes.labelsize : 22
+axes.labelpad : 10
+axes.titlesize : 22
+font.size : 16
+legend.fontsize : 16
+
+xtick.labelsize : 15
+xtick.direction : in
+xtick.major.size : 1.5
+xtick.major.width : 0.5
+xtick.minor.size : 0
+xtick.minor.width : 0.5
+xtick.minor.visible : True
+xtick.top : True
+
+ytick.labelsize : 15
+ytick.direction : in
+ytick.major.size : 1.5
+ytick.major.width : 0.5
+ytick.minor.size : 0
+ytick.minor.width : 0.5
+ytick.minor.visible : True
+ytick.right : True
+
+axes.linewidth : 0.5
+grid.linewidth : 0.5
+lines.linewidth : 1
+hatch.linewidth : 0.75
+
+legend.frameon : False
+
+savefig.bbox : tight
+savefig.pad_inches : 0.05

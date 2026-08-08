@@ -68,6 +68,8 @@ def write_submit_script(submit_path, manifest_path, n_chunks, mem="4G"):
         "",
         'cd "$SLURM_SUBMIT_DIR"',
         "mkdir -p cluster/logs",
+        'source "$HOME/miniconda3/etc/profile.d/conda.sh"',
+        "conda activate info-latt",
         f'MANIFEST="${{1:-{manifest_path.as_posix()}}}"',
         'python -m cluster.worker --manifest "$MANIFEST" --chunk-id "${SLURM_ARRAY_TASK_ID}"',
         "",

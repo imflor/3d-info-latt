@@ -47,6 +47,7 @@ def build_state_kwargs(args, state_class, n_sites):
     state_kwargs = {"n_sites": list(n_sites)}
     if state_class == "TightBindingGS":
         state_kwargs["t"] = args.t
+        state_kwargs["periodic"] = args.periodic
         return state_kwargs
     if state_class == "PiFluxGS":
         state_kwargs["t"] = args.t
@@ -78,7 +79,7 @@ def main(default_state_class="TightBindingGS", allow_state_class=True):
     parser.add_argument("--shuffle-seed", type=int, default=0, help="Seed used to shuffle jobs before chunking.")
     parser.add_argument("--mem", default="4G", help="Memory requested per Slurm worker.")
     parser.add_argument("--t", type=float, default=1.0, help="Nearest-neighbor hopping for TightBindingGS or PiFluxGS.")
-    parser.add_argument("--periodic", action="store_true", help="Use periodic boundaries for PiFluxGS or NodalLineGS.")
+    parser.add_argument("--periodic", action="store_true", help="Use periodic boundaries for TightBindingGS, PiFluxGS, or NodalLineGS.")
     parser.add_argument("--m", type=float, default=2.8, help="Mass parameter for NodalLineGS.")
     parser.add_argument("--v", type=float, default=1.0, help="Orbital-mixing parameter for NodalLineGS.")
     parser.add_argument("--surface-mass", type=float, default=0.0, help="Boundary mixing mass for NodalLineGS.")

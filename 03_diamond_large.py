@@ -27,13 +27,13 @@ plt.show()
 
 ## Plot the local information spread
 
-reference_point = (4, 0, 7)
+reference_point = (7, 7, 7)
 local_information_spread = lat.spread_around_point(*reference_point)
 il.save_rotating_3d_array(
     local_information_spread,
     save_path="figures/i_centered_15.gif",
     vmax=.002,
-    cutoff=.2,
+    cutoff=.1,
     power=.9,
     max_alpha=1,
     marker_scale=100,
